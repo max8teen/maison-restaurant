@@ -1,0 +1,4 @@
+﻿backend/target/
+*.class
+.env
+backend/.env
