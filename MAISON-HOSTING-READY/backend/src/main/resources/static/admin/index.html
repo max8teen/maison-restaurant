@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Dashboard — Maison Admin</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0b0d'/><text y='26' x='4' font-size='24' fill='%23c49a3c' font-family='Georgia,serif'>M</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="admin.css"/>
+</head>
+<body>
+
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-gem">M</div>
+      <div>
+        <div class="logo-text">Maison</div>
+        <div class="logo-sub">Admin Panel</div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-items">
+    <div class="nav-section">Main</div>
+    <a href="index.html"         class="nav-item active"><span class="nav-icon">◈</span> Dashboard</a>
+    <a href="reservations.html"  class="nav-item"><span class="nav-icon">◧</span> Reservations <span class="nav-badge" id="pending-badge">0</span></a>
+    <a href="tables.html"        class="nav-item"><span class="nav-icon">⬡</span> Tables</a>
+    <div class="nav-section">People</div>
+    <a href="customers.html"     class="nav-item"><span class="nav-icon">◉</span> Customers</a>
+    <a href="waitlist.html"      class="nav-item"><span class="nav-icon">◷</span> Waitlist</a>
+    <div class="nav-section">Analytics</div>
+    <a href="reports.html"       class="nav-item"><span class="nav-icon">▦</span> Reports</a>
+    <div class="nav-section">Content</div>
+    <a href="reviews.html"      class="nav-item"><span class="nav-icon">★</span> Reviews <span class="nav-badge" id="reviews-pending-badge">0</span></a>
+    <div class="nav-section">System</div>
+    <a href="settings.html"      class="nav-item"><span class="nav-icon">⚙</span> Settings</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar">A</div>
+      <div>
+        <div class="user-name" id="admin-name">Admin</div>
+        <div class="user-role">● ADMIN</div>
+      </div>
+      <button class="logout-btn" title="Sign out" onclick="doLogout()">⇥</button>
+    </div>
+  </div>
+</aside>
+
+<div id="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger-btn" onclick="toggleSidebar()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      </button>
+      <div>
+        <div class="topbar-title">Dashboard</div>
+        <div class="topbar-crumb">Maison / Dashboard</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <a href="reservations.html" class="topbar-btn btn-gold-style">+ New Booking</a>
+    </div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-stripe" style="background:linear-gradient(90deg,var(--green),transparent)"></div>
+        <div class="stat-label">Today's Bookings</div>
+        <div class="stat-val" style="color:var(--green)" id="stat-today">—</div>
+        <div class="stat-sub" style="color:var(--green)">Live count</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-stripe" style="background:linear-gradient(90deg,var(--blue),transparent)"></div>
+        <div class="stat-label">Total Guests</div>
+        <div class="stat-val" style="color:var(--blue)" id="stat-guests">—</div>
+        <div class="stat-sub" style="color:var(--blue)">Expected today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-stripe" style="background:linear-gradient(90deg,var(--amber),transparent)"></div>
+        <div class="stat-label">Pending</div>
+        <div class="stat-val" style="color:var(--amber)" id="stat-pending">—</div>
+        <div class="stat-sub" style="color:var(--amber)">Awaiting confirm</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-stripe" style="background:linear-gradient(90deg,var(--purple),transparent)"></div>
+        <div class="stat-label">Total Bookings</div>
+        <div class="stat-val" style="color:var(--purple)" id="stat-total">—</div>
+        <div class="stat-sub" style="color:var(--purple)">All time</div>
+      </div>
+    </div>
+
+    <!-- Charts + Recent -->
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:20px;" class="resp-grid">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Monthly Trend</span>
+          <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;">Last 6 months</span>
+        </div>
+        <div style="padding:20px;">
+          <div class="chart-box"><canvas id="trendChart"></canvas></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Status Split</span></div>
+        <div style="padding:20px;">
+          <div class="chart-box" style="height:160px;"><canvas id="donutChart"></canvas></div>
+          <div id="donut-legend" style="margin-top:14px;display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Reservations -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Recent Reservations</span>
+        <a href="reservations.html" class="card-action">View all →</a>
+      </div>
+      <div class="tbl-wrap">
+        <table class="data-table">
+          <thead><tr><th>Ref</th><th>Guest</th><th>Date</th><th>Time</th><th>Party</th><th>Status</th></tr></thead>
+          <tbody id="recent-tbody">
+            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px;">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="admin.js"></script>
+<script>
+let trendChart, donutChart;
+
+async function loadDashboard() {
+  const res = await apiCall('POST', 'get-stats');
+  if (!res.success) { toast(res.message, 'error'); return; }
+
+  const d = res.data;
+  document.getElementById('stat-today').textContent   = d.today_bookings;
+  document.getElementById('stat-guests').textContent  = d.today_guests;
+  document.getElementById('stat-pending').textContent = d.pending;
+  document.getElementById('stat-total').textContent   = d.total_bookings;
+  document.getElementById('pending-badge').textContent = d.pending;
+
+  // Recent table
+  document.getElementById('recent-tbody').innerHTML = d.recent.length === 0
+    ? '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px;">No reservations yet</td></tr>'
+    : d.recent.map(r => `
+      <tr>
+        <td><span style="color:var(--blue);font-family:'DM Mono',monospace;font-size:12px;">${r.booking_ref}</span></td>
+        <td>${r.guest_name}</td>
+        <td style="font-family:'DM Mono',monospace;font-size:12px;">${r.reservation_date}</td>
+        <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--green);">${r.reservation_time}</td>
+        <td>${r.party_size}</td>
+        <td><span class="pill ${STATUS_PILL[r.status]||'pill-muted'}">${r.status}</span></td>
+      </tr>`).join('');
+
+  // Trend chart
+  const months = d.monthly_trend.map(m => m.month);
+  const vals   = d.monthly_trend.map(m => m.count);
+  if (trendChart) trendChart.destroy();
+  trendChart = new Chart(document.getElementById('trendChart'), {
+    type: 'bar',
+    data: { labels: months, datasets: [{ data: vals, backgroundColor: 'rgba(62,207,142,0.7)', borderRadius: 5, borderSkipped: false, hoverBackgroundColor: 'var(--green)' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a2230', titleColor: '#e8edf3', bodyColor: '#7d8fa3' } }, scales: { x: { grid: { display: false }, ticks: { color: '#5a6475', font: { family: 'DM Mono', size: 10 } } }, y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a6475', font: { size: 10 } } } } }
+  });
+
+  // Donut chart
+  const dColors = ['rgba(62,207,142,0.8)','rgba(251,191,36,0.8)','rgba(96,165,250,0.8)','rgba(192,132,252,0.8)','rgba(248,113,113,0.8)','rgba(90,100,117,0.8)'];
+  const statusCounts = STATUSES.map(s => d.status_counts[s] || 0);
+  if (donutChart) donutChart.destroy();
+  donutChart = new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: { labels: STATUSES, datasets: [{ data: statusCounts, backgroundColor: dColors, borderWidth: 0, hoverOffset: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a2230' } } }
+  });
+  document.getElementById('donut-legend').innerHTML = STATUSES.map((s, i) => `
+    <div style="display:flex;align-items:center;justify-content:space-between;font-size:11px;">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:${dColors[i]};"></div>
+        <span style="color:var(--muted2);text-transform:capitalize;">${s.replace('_',' ')}</span>
+      </div>
+      <span style="font-family:'DM Mono',monospace;color:var(--text);">${statusCounts[i]}</span>
+    </div>`).join('');
+}
+
+loadDashboard();
+</script>
+</body>
+</html>

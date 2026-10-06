@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Book a Table — Maison Fine Dining Thane</title>
+<meta name="description" content="Reserve your table at Maison Fine Dining, Thane. Select your preferred date, time, and table for an unforgettable dining experience."/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@200;300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config={theme:{extend:{colors:{ink:{DEFAULT:'#0a0b0d',light:'#131518',elevated:'#1a1c20'},cream:{DEFAULT:'#f2edd8',dim:'#ccc4a8'},gold:{DEFAULT:'#c49a3c',light:'#caa94f',dim:'#7a6a35'}}}}}
+</script>
+<style>
+body{font-family:'Outfit',sans-serif;background:#0a0b0d;color:#f2edd8;-webkit-font-smoothing:antialiased;margin:0;}
+h1,h2{font-family:'Playfair Display',serif;}
+.font-display{font-family:'Playfair Display',serif;}
+.font-mono-dm{font-family:'JetBrains Mono',monospace;}
+.text-gradient-gold{background:linear-gradient(135deg,#c49a3c,#d4b96a,#c49a3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hr-gold{height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,0.5),transparent);border:none;}
+.noise::before{content:'';position:absolute;inset:0;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;}
+.glass{background:rgba(26,28,32,0.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(196,154,60,0.08);}
+.input-premium{width:100%;padding:14px 20px;font-size:14px;outline:none;transition:all 0.3s;background:rgba(26,28,32,0.8);border:1px solid rgba(196,154,60,0.1);color:#f2edd8;font-family:'Outfit',sans-serif;box-sizing:border-box;}
+.input-premium:focus{border-color:rgba(196,154,60,0.4);box-shadow:0 0 0 3px rgba(196,154,60,0.06);}
+.input-premium::placeholder{color:rgba(100,110,130,0.6);}
+select.input-premium{appearance:none;cursor:pointer;}
+textarea.input-premium{resize:vertical;}
+.btn-premium{width:100%;padding:16px 32px;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-family:'Outfit',sans-serif;font-weight:500;background:linear-gradient(135deg,#b8903a,#c9a24a);color:#0a0b0d;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none;display:inline-block;text-align:center;}
+.btn-premium:hover{background:linear-gradient(135deg,#c9a24a,#d4b45a);box-shadow:0 8px 32px -8px rgba(196,154,60,0.4);transform:translateY(-1px);}
+.btn-premium:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-outline-premium{padding:16px 32px;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-family:'Outfit',sans-serif;background:transparent;border:1px solid rgba(242,237,216,0.15);color:rgba(242,237,216,0.6);cursor:pointer;transition:all 0.3s;text-decoration:none;display:inline-block;text-align:center;flex:1;}
+.btn-outline-premium:hover{border-color:rgba(196,154,60,0.5);color:#c49a3c;}
+.table-btn{padding:14px 10px;border:1px solid rgba(196,154,60,0.12);background:transparent;text-align:center;cursor:pointer;transition:all 0.2s;font-family:'Outfit',sans-serif;}
+.table-btn:hover{border-color:rgba(196,154,60,0.3);}
+.table-btn.selected{background:#c49a3c;border-color:#c49a3c;}
+.table-btn:disabled{opacity:0.45;cursor:not-allowed;}
+::selection{background:rgba(196,154,60,0.3);color:#f2edd8;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.animate-fade-up{animation:fadeUp 0.6s ease both;}
+
+@media(max-width:680px){.hidden.md\:flex{display:none !important;}}
+
+/* ── Unified Navbar ─────────────────────────────────────────── */
+.mn{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:transparent;border-bottom:1px solid transparent;transition:all .4s;}
+.mn.scrolled{background:rgba(12,13,16,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(196,154,60,.08);}
+.mn-logo{font-family:'Playfair Display',serif;font-size:19px;letter-spacing:.28em;background:linear-gradient(135deg,#c49a3c,#d4b96a,#c49a3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;font-weight:500;}
+.mn-links{display:flex;align-items:center;gap:32px;}
+.mn-link{color:rgba(242,237,216,.4);font-size:10px;letter-spacing:.25em;text-transform:uppercase;text-decoration:none;font-family:'Outfit',sans-serif;background:none;border:none;cursor:pointer;padding:0;transition:color .2s;}
+.mn-link:hover{color:rgba(242,237,216,.85);}
+.mn-link.mn-active{color:#c49a3c;}
+.mn-btn{color:#c49a3c;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:'Outfit',sans-serif;background:none;border:1px solid rgba(196,154,60,.25);cursor:pointer;padding:8px 18px;transition:all .2s;text-decoration:none;display:inline-block;}
+.mn-btn:hover{border-color:#c49a3c;background:rgba(196,154,60,.06);}
+.mn-ham{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;-webkit-tap-highlight-color:transparent;z-index:101;}
+.mn-hb{width:22px;height:2px;background:#c49a3c;border-radius:1px;transition:all .28s ease;}
+.mn-ham.open .mn-hb:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.mn-ham.open .mn-hb:nth-child(2){opacity:0;}
+.mn-ham.open .mn-hb:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mn-drawer{display:none;position:fixed;top:64px;left:0;right:0;background:#0c0d10;border-bottom:1px solid rgba(196,154,60,.12);z-index:99;padding:6px 0 18px;}
+.mn-drawer.open{display:block;}
+.mn-mi{display:block;padding:14px 28px;color:rgba(242,237,216,.4);font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;font-family:'Outfit',sans-serif;border:none;background:none;width:100%;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color .2s;}
+.mn-mi:hover{color:#f2edd8;}
+.mn-mi-gold{color:#c49a3c !important;}
+.mn-mi-red{color:#f87171 !important;}
+.mn-mdiv{height:1px;background:rgba(196,154,60,.08);margin:8px 24px;}
+@media(max-width:700px){.mn{padding:0 16px;}.mn-links{display:none;}.mn-ham{display:flex;}}
+</style>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0b0d'/><text y='26' x='4' font-size='24' fill='%23c49a3c' font-family='Georgia,serif'>M</text></svg>"/>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="mn" id="mainNav">
+  <a href="index.html" class="mn-logo">MAISON</a>
+  <div class="mn-links" id="mnLinks"></div>
+  <button class="mn-ham" id="mnHam" onclick="mnToggle()" aria-label="Menu">
+    <span class="mn-hb"></span><span class="mn-hb"></span><span class="mn-hb"></span>
+  </button>
+</nav>
+<div class="mn-drawer" id="mnDrawer">
+  <div class="mn-mdiv"></div>
+  <a href="index.html" class="mn-mi">Home</a>
+  <a href="book.html" class="mn-mi">Reserve</a>
+  <a href="my-bookings.html" class="mn-mi">My Bookings</a>
+  <div id="mnAdminMob"></div>
+  <div class="mn-mdiv"></div>
+  <div id="mnAuthMob"></div>
+</div>
+</div>
+</div>
+<div class="max-w-[900px] mx-auto px-6 pt-[clamp(100px,12vw,140px)] pb-[clamp(64px,10vw,96px)] relative">
+  <div class="absolute inset-0 noise pointer-events-none"></div>
+
+  <!-- Header -->
+  <div class="text-center mb-[clamp(32px,6vw,48px)] relative z-10 animate-fade-up">
+    <div class="font-mono-dm text-[10px] tracking-[0.5em] uppercase text-gold/40 mb-3">Reserve</div>
+    <h1 class="font-display text-[clamp(30px,6vw,44px)] font-medium"><span class="text-gradient-gold">Book a Table</span></h1>
+    <div class="hr-gold w-14 mx-auto mt-5"></div>
+  </div>
+
+  <!-- Step indicator -->
+  <div class="flex items-center justify-center gap-0 mb-10 relative z-10" id="stepBar">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-mono-dm font-medium bg-gold text-ink" id="dot1">1</div>
+      <span class="font-mono-dm text-[10px] tracking-[0.2em] uppercase text-cream/25">Details</span>
+    </div>
+    <div class="w-12 h-px mx-3 bg-cream/10 transition-all duration-500" id="line1"></div>
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-mono-dm font-medium border border-cream/10 text-cream/20 transition-all duration-500" id="dot2">2</div>
+      <span class="font-mono-dm text-[10px] tracking-[0.2em] uppercase text-cream/25">Contact</span>
+    </div>
+  </div>
+
+  <!-- Step 1 -->
+  <div id="step1" class="glass p-[clamp(24px,5vw,40px)] relative z-10 animate-fade-up">
+    <div class="font-display text-xl text-cream/80 mb-7">Reservation Details</div>
+    <div class="grid grid-cols-2 gap-4" style="grid-template-columns:1fr 1fr;">
+      <div class="mb-4">
+        <label class="block font-mono-dm text-[10px] tracking-[0.3em] uppercase text-cream/25 mb-2.5">Date</label>
+        <input type="date" id="resDate" class="input-premium" onchange="loadTables()"/>
+      </div>
+      <div class="mb-4">
+        <label class="block font-mono-dm text-[10px] tracking-[0.3em] uppercase text-cream/25 mb-2.5">Time</label>
+        <select id="resTime" class="input-premium" onchange="loadTables()">
+          <optgroup label="── Lunch ──────────">
+            <option value="12:00">12:00 PM</option>
+            <option value="12:30">12:30 PM</option>
+            <option value="13:00">1:00 PM</option>
+            <option value="13:30">1:30 PM</option>
+            <option value="14:00">2:00 PM</option>
+            <option value="14:30">2:30 PM</option>
+          </optgroup>
+          <optgroup label="── Dinner ──────────">
+            <option value="19:00">7:00 PM</option>
+            <option value="19:30">7:30 PM</option>
+            <option value="20:00" selected>8:00 PM</option>
+            <option value="20:30">8:30 PM</option>
+            <option value="21:00">9:00 PM</option>
+            <option value="21:30">9:30 PM</option>
+            <option value="22:00">10:00 PM</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+    <div class="mb-4">
+      <label class="block font-mono-dm text-[10px] tracking-[0.3em] uppercase text-cream/25 mb-2.5">Number of Guests</label>
+      <select id="partySize" class="input-premium" onchange="loadTables()">
+        <option value="1">1 Guest</option><option value="2" selected>2 Guests</option>
+        <option value="3">3 Guests</option><option value="4">4 Guests</option>
+        <option value="5">5 Guests</option><option value="6">6 Guests</option>
+        <option value="7">7 Guests</option><option value="8">8 Guests</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="block font-mono-dm text-[10px] tracking-[0.3em] uppercase text-cream/25 mb-2.5">Occasion</label>
+      <select id="occasion" class="input-premium">
+        <option value="none">No special occasion</option><option value="birthday">Birthday</option>
+        <option value="anniversary">Anniversary</option><option value="business">Business Meeting</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <!-- Table Selection -->
+    <div class="mb-5" id="tablesSection">
+      <label class="block font-mono-dm text-[10px] tracking-[0.3em] uppercase text-cream/25 mb-2.5">
+        Choose Table <span class="text-gold/30 text-[9px] tracking-normal normal-case">(optional)</span>
+      </label>
+      <div class="grid gap-2.5" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr));" id="tablesGrid"></div>
+    </div>
+
+    <div class="mb-5">
+      <label class="block font-mono-dm text-[10px] tracking-[0.3em] uppercase text-cream/25 mb-2.5">Special Requests</label>
+      <textarea id="specialReqs" class="input-premium" rows="3" placeholder="Allergies, seating preferences, accessibility…"></textarea>
+    </div>
+    <div id="avail-badge" style="font-size:12px;letter-spacing:1px;text-align:center;min-height:18px;margin-bottom:12px;transition:color 0.3s;"></div>
+    <button onclick="goToStep2()" class="btn-premium">Next — Contact Details →</button>
+  </div>
+
+  <!-- Step 2 -->
+  <div id="step2" class="glass p-[clamp(24px,5vw,40px)] relative z-10 hidden">
+    <div class="font-display text-xl text-cream/80 mb-7">Contact Information</div>
+    <div class="mb-5">
+      <label class="block font-mono-dm text-[10px] tracking-[0.3em] uppercase text-cream/25 mb-2.5">Full Name</label>
+      <input id="guestName" class="input-premium" placeholder="Your name"/>
+    </div>
+    <div class="mb-5">
+      <label class="block font-mono-dm text-[10px] tracking-[0.3em] uppercase text-cream/25 mb-2.5">Email</label>
+      <input type="email" id="guestEmail" class="input-premium" placeholder="your@email.com"/>
+    </div>
+    <div class="mb-5">
+      <label class="block font-mono-dm text-[10px] tracking-[0.3em] uppercase text-cream/25 mb-2.5">
+        Phone <span class="text-gold/30 text-[9px] tracking-normal normal-case">(for SMS confirmation)</span>
+      </label>
+      <input id="guestPhone" class="input-premium" placeholder="+91 7972666151"/>
+    </div>
+    <div class="flex gap-3 mt-3">
+      <button onclick="goToStep1()" class="btn-outline-premium">← Back</button>
+      <button onclick="confirmBooking()" id="confirmBtn" class="btn-premium" style="flex:1;">Confirm →</button>
+    </div>
+  </div>
+
+  <!-- Step 3 confirmed -->
+  <div id="step3" class="relative z-10 text-center hidden">
+    <div class="text-5xl mb-5">✓</div>
+    <div class="font-mono-dm text-[10px] tracking-[0.5em] uppercase text-gold/40 mb-3">Confirmed</div>
+    <h1 class="font-display text-[clamp(26px,6vw,38px)] font-medium mb-8"><span class="text-gradient-gold">Your Table is Reserved</span></h1>
+    <div class="glass p-[clamp(20px,5vw,36px)] text-left mb-6" id="confirmDetails"></div>
+    <div id="wa-btn-container"></div>
+    <div class="flex flex-col gap-3">
+      <a href="my-bookings.html" class="btn-premium no-underline block w-full text-center">View My Bookings</a>
+      <a href="index.html" class="btn-outline-premium no-underline block w-full text-center">Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Auth check ────────────────────────────────────────────────────────────────
+const _token = localStorage.getItem('maison_token') || '';
+['resDate','resTime','partySize'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('change', fetchAvailability);
+});
+if (!_token) {
+  sessionStorage.setItem('login_redirect', 'book.html');
+  window.location.href = 'login.html';
+}
+
+// ── Get current user from localStorage ───────────────────────────────────────
+let _currentUser = null;
+try { _currentUser = JSON.parse(localStorage.getItem('maison_user')); } catch(e) {}
+
+
+
+// ── Navbar scroll effect ──────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  if (window.scrollY > 40) { nav.style.background='rgba(26,28,32,0.6)'; nav.style.backdropFilter='blur(20px)'; }
+  else { nav.style.background='transparent'; nav.style.backdropFilter='none'; }
+});
+
+// ── Init date ─────────────────────────────────────────────────────────────────
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('resDate').min = today;
+document.getElementById('resDate').value = today;
+
+let selectedTable = null;
+let selectedTableData = null;
+let cachedTables = []; // keep last loaded tables so selectTable can re-render without refetch
+
+function toAMPM(time24) {
+  const [h, m] = time24.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const hour   = h % 12 || 12;
+  return hour + ':' + String(m).padStart(2,'0') + ' ' + period;
+}
+
+async function loadTables() {
+  const guests = parseInt(document.getElementById('partySize').value);
+  const date   = document.getElementById('resDate').value;
+  const time   = document.getElementById('resTime').value;
+  const grid   = document.getElementById('tablesGrid');
+
+  // Reset selection when inputs change
+  selectedTable = null;
+  selectedTableData = null;
+  cachedTables = [];
+
+  if (!date || !time) return;
+
+  grid.innerHTML = '<div class="font-mono-dm text-[10px] text-cream/20 py-2">Loading tables…</div>';
+  document.getElementById('tablesSection').style.display = 'block';
+
+  try {
+    const res  = await fetch(`api/get-tables?party=${guests}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&t=${encodeURIComponent(_token)}`);
+    const data = await res.json();
+
+    if (!data.success || !data.data.tables.length) {
+      grid.innerHTML = '<div class="font-mono-dm text-[10px] text-cream/20 py-2">No tables available for selected time</div>';
+      return;
+    }
+
+    cachedTables = data.data.tables;
+    renderTables();
+  } catch(e) {
+    grid.innerHTML = '<div class="font-mono-dm text-[10px] text-red-400/60 py-2">Could not load tables</div>';
+  }
+}
+
+function renderTables() {
+  const grid = document.getElementById('tablesGrid');
+  if (!cachedTables.length) return;
+  grid.innerHTML = cachedTables.map(t => {
+    const avail = t.status === 'available';
+    const sel   = selectedTable === t.id;
+    return `<button onclick="selectTable(${t.id})" class="table-btn ${sel ? 'selected' : ''}" ${!avail ? 'disabled' : ''}>
+      <div class="font-mono-dm font-semibold text-sm ${sel ? 'text-ink' : 'text-cream/80'}">${t.table_number}</div>
+      <div class="text-[11px] mt-1 ${sel ? 'text-ink/70' : 'text-cream/40'}">${t.capacity} seats · ${t.location}</div>
+      <div class="text-[10px] mt-1.5 tracking-wide ${sel ? 'text-white/80' : avail ? 'text-green-400' : 'text-red-400'}">${avail ? 'available' : 'booked'}</div>
+    </button>`;
+  }).join('');
+}
+
+function selectTable(id) {
+  if (selectedTable === id) {
+    selectedTable = null;
+    selectedTableData = null;
+  } else {
+    selectedTable = id;
+    selectedTableData = cachedTables.find(t => t.id === id) || null;
+  }
+  renderTables(); // just re-render from cache — no API call
+}
+
+// ── Step navigation ───────────────────────────────────────────────────────────
+async function fetchAvailability() {
+  const date  = document.getElementById('resDate').value;
+  const time  = document.getElementById('resTime').value;
+  const party = document.getElementById('partySize').value || 2;
+  const badge = document.getElementById('avail-badge');
+  if (!badge || !date || !time) return;
+  badge.textContent = '…';
+  badge.style.color = '#7a6a35';
+  try {
+    const r = await fetch(`api/get-tables?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&party=${encodeURIComponent(party)}&t=${encodeURIComponent(localStorage.getItem('maison_token')||'')}`);
+    const d = await r.json();
+    const count = d.data?.available_count ?? 0;
+    if (count === 0) {
+      badge.textContent = '✗ No tables available — join the waitlist below';
+      badge.style.color = '#c0392b';
+    } else if (count <= 2) {
+      badge.textContent = `⚡ Only ${count} table${count>1?'s':''} left for this slot`;
+      badge.style.color = '#c49a3c';
+    } else {
+      badge.textContent = `✓ ${count} tables available`;
+      badge.style.color = '#4caf50';
+    }
+  } catch(e) { badge.textContent = ''; }
+}
+function goToStep2() {
+  if (!document.getElementById('resDate').value) { alert('Please select a date'); return; }
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+  document.getElementById('dot1').textContent = '✓';
+  document.getElementById('dot1').className = 'w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-mono-dm font-medium bg-gold text-ink';
+  document.getElementById('line1').className = 'w-12 h-px mx-3 bg-gold/40 transition-all duration-500';
+  document.getElementById('dot2').className  = 'w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-mono-dm font-medium bg-gold text-ink transition-all duration-500';
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  // ── Auto-fill contact from logged in user ─────────────────────────────────
+  if (_currentUser) {
+    const n = document.getElementById('guestName');
+    const e = document.getElementById('guestEmail');
+    const p = document.getElementById('guestPhone');
+    if (n && !n.value) n.value = _currentUser.full_name || '';
+    if (e && !e.value) e.value = _currentUser.email     || '';
+    if (p && !p.value) p.value = _currentUser.phone     || '';
+  }
+}
+
+function goToStep1() {
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step1').classList.remove('hidden');
+  document.getElementById('dot1').textContent = '1';
+  document.getElementById('line1').className = 'w-12 h-px mx-3 bg-cream/10 transition-all duration-500';
+  document.getElementById('dot2').className  = 'w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-mono-dm font-medium border border-cream/10 text-cream/20 transition-all duration-500';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ── Confirm booking ───────────────────────────────────────────────────────────
+async function confirmBooking() {
+  const name  = document.getElementById('guestName').value.trim();
+  const email = document.getElementById('guestEmail').value.trim();
+  const phone = document.getElementById('guestPhone').value.trim();
+  if (!name)  { alert('Name is required');  return; }
+  if (!email) { alert('Email is required'); return; }
+
+  const btn = document.getElementById('confirmBtn');
+  btn.textContent = 'Confirming…'; btn.disabled = true;
+
+  const payload = {
+    _token:           _token,
+    guest_name:       name,
+    guest_email:      email,
+    guest_phone:      phone,
+    reservation_date: document.getElementById('resDate').value,
+    reservation_time: document.getElementById('resTime').value,
+    party_size:       parseInt(document.getElementById('partySize').value),
+    occasion:         document.getElementById('occasion').value || 'none',
+    special_requests: document.getElementById('specialReqs').value || '',
+    table_id:         selectedTable || 0
+  };
+
+  try {
+    const res  = await fetch('api/create-booking?t=' + encodeURIComponent(_token), {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+      body:    JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if (!data.success) {
+      btn.textContent = 'Confirm Reservation'; btn.disabled = false;
+      alert(data.message || 'Booking failed. Please try again.');
+      return;
+    }
+
+    const ref   = data.data.booking_ref;
+    const dt    = new Date(payload.reservation_date + 'T00:00:00');
+    const fdate = dt.toLocaleDateString('en-IN', {weekday:'short',year:'numeric',month:'short',day:'numeric'});
+
+    const tableRow = data.data.table_number
+      ? [['Table', data.data.table_number + ' · ' + data.data.table_location, 'text-gold/80']]
+      : [];
+
+    document.getElementById('confirmDetails').innerHTML = [
+      ['Reference', ref,                   'text-gold font-semibold'],
+      ['Guest',     name,                  ''],
+      ['Date',      fdate,                 ''],
+      ['Time',      toAMPM(payload.reservation_time), ''],
+      ['Party',     payload.party_size + ' guests', ''],
+      ...tableRow,
+      ['Status',    'Confirmed ✓',         'text-green-400'],
+    ].map(([l,v,cls]) => `
+      <div class="flex justify-between items-center text-[13px] py-3 border-b border-cream/5 last:border-b-0 gap-4">
+        <span class="text-cream/30 shrink-0">${l}</span>
+        <span class="text-cream/70 text-right font-mono-dm text-xs ${cls}">${v}</span>
+      </div>`
+    ).join('');
+
+    // WhatsApp button
+    const waLink = (data.data || {}).whatsapp_link;
+    const waContainer = document.getElementById('wa-btn-container');
+    if (waContainer) {
+      waContainer.innerHTML = waLink ? `<a href="${waLink}" target="_blank" rel="noopener"
+        style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;margin-top:16px;background:#25D366;color:#fff;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chat on WhatsApp
+      </a>` : '';
+    }
+    document.getElementById('step2').classList.add('hidden');
+    document.getElementById('stepBar').classList.add('hidden');
+    document.getElementById('step3').classList.remove('hidden');
+    window.scrollTo({top:0, behavior:'smooth'});
+
+  } catch(e) {
+    btn.textContent = 'Confirm Reservation'; btn.disabled = false;
+    alert('Could not connect to server. Please try again.');
+  }
+}
+
+loadTables();
+</script>
+<script>
+(function initNav(){
+  var base=window.location.pathname.indexOf('/admin/')>-1?'../':'';
+  var token=localStorage.getItem('maison_token')||'';
+  var user=null;
+  try{user=JSON.parse(localStorage.getItem('maison_user'));}catch(e){}
+  var isAdmin=user&&user.role==='admin';
+  var page=window.location.pathname.split('/').pop()||'index.html';
+  function lnk(href,label,active){return '<a href="'+base+href+'" class="mn-link'+(active?' mn-active':'')+'" >'+label+'</a>';}
+  var desk=document.getElementById('mnLinks');
+  var mobAuth=document.getElementById('mnAuthMob');
+  var mobAdmin=document.getElementById('mnAdminMob');
+  if(user&&token){
+    desk.innerHTML=
+      lnk('index.html','Home',page==='index.html')+
+      lnk('book.html','Reserve',page==='book.html')+
+      lnk('menu.html','Menu',page==='menu.html')+
+      lnk('my-bookings.html','Bookings',page==='my-bookings.html')+
+      lnk('profile.html','Profile',page==='profile.html')+
+      lnk('about.html','About',page==='about.html')+
+      (isAdmin?lnk('admin/index.html','Admin',false):'')+
+      '<button onclick="mnSignOut()" class="mn-btn">Sign Out</button>';
+    if(mobAdmin&&isAdmin)mobAdmin.innerHTML='<a href="'+base+'admin/index.html" class="mn-mi mn-mi-gold">Admin Panel</a>';
+    if(mobAuth)mobAuth.innerHTML='<button onclick="mnSignOut()" class="mn-mi mn-mi-red">Sign Out</button>';
+  }else{
+    desk.innerHTML=
+      lnk('index.html','Home',page==='index.html')+
+      lnk('book.html','Reserve',page==='book.html')+
+      lnk('menu.html','Menu',page==='menu.html')+
+      lnk('about.html','About',page==='about.html')+
+      '<a href="'+base+'login.html" class="mn-btn">Sign In</a>';
+    if(mobAuth)mobAuth.innerHTML='<a href="'+base+'login.html" class="mn-mi mn-mi-gold">Sign In</a><a href="'+base+'register.html" class="mn-mi">Create Account</a>';
+  }
+  document.querySelectorAll('.mn-drawer a[href]').forEach(function(a){
+    var h=a.getAttribute('href');
+    if(h&&!h.startsWith('http')&&!h.startsWith(base)&&base)a.href=base+h;
+  });
+})();
+function mnToggle(){document.getElementById('mnHam').classList.toggle('open');document.getElementById('mnDrawer').classList.toggle('open');}
+document.addEventListener('click',function(e){var h=document.getElementById('mnHam'),d=document.getElementById('mnDrawer');if(h&&d&&!h.contains(e.target)&&!d.contains(e.target)){h.classList.remove('open');d.classList.remove('open');}});
+window.addEventListener('scroll',function(){document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>10);});
+function mnSignOut(){localStorage.removeItem('maison_token');localStorage.removeItem('maison_user');window.location.href=(window.location.pathname.indexOf('/admin/')>-1?'../':'')+'index.html';}
+</script>
+</body>
+</html>

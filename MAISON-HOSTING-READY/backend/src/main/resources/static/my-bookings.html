@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Bookings — Maison</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@200;300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<script>tailwind.config={theme:{extend:{colors:{ink:{DEFAULT:'#0a0b0d'},cream:{DEFAULT:'#f2edd8'},gold:{DEFAULT:'#c49a3c'}}}}}</script>
+<style>
+*{box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:#0a0b0d;color:#f2edd8;-webkit-font-smoothing:antialiased;margin:0;overflow-x:hidden;}
+.font-display{font-family:'Playfair Display',serif;}
+.font-mono{font-family:'JetBrains Mono',monospace;}
+.gold-text{background:linear-gradient(135deg,#c49a3c,#d4b96a,#c49a3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hr-gold{height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,0.5),transparent);border:none;margin:0;}
+.glass{background:rgba(26,28,32,0.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(196,154,60,0.08);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.fade-up{animation:fadeUp .5s ease both;}
+
+/* NAV */
+
+/* HAMBURGER */
+
+/* MOBILE MENU */
+
+/* CONTENT */
+.page{max-width:800px;margin:0 auto;padding:120px 24px 80px;}
+.filter-btn{padding:8px 18px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;cursor:pointer;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(242,237,216,.3);transition:all .2s;-webkit-tap-highlight-color:transparent;}
+.filter-btn.on{background:#c49a3c;border-color:#c49a3c;color:#0a0b0d;}
+.card{background:rgba(26,28,32,.5);border:1px solid rgba(196,154,60,.08);padding:20px;margin-bottom:12px;transition:border-color .3s;}
+.card:hover{border-color:rgba(196,154,60,.2);}
+.badge{display:inline-flex;align-items:center;padding:4px 12px;border-radius:999px;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;}
+.b-confirmed{background:rgba(74,222,128,.08);color:#4ade80;border:1px solid rgba(74,222,128,.2);}
+.b-pending{background:rgba(251,191,36,.08);color:#fbbf24;border:1px solid rgba(251,191,36,.2);}
+.b-completed{background:rgba(96,165,250,.08);color:#60a5fa;border:1px solid rgba(96,165,250,.2);}
+.b-cancelled{background:rgba(248,113,113,.08);color:#f87171;border:1px solid rgba(248,113,113,.2);}
+.b-seated{background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.2);}
+.cancel-btn{padding:8px 16px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;background:transparent;border:1px solid rgba(248,113,113,.2);color:rgba(248,113,113,.6);cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;}
+.cancel-btn:hover{background:rgba(248,113,113,.06);border-color:rgba(248,113,113,.4);}
+.btn-gold{display:inline-block;padding:14px 28px;font-size:11px;letter-spacing:.25em;text-transform:uppercase;font-family:'Outfit',sans-serif;font-weight:500;background:linear-gradient(135deg,#b8903a,#c9a24a);color:#0a0b0d;border:none;cursor:pointer;text-decoration:none;}
+
+@media(max-width:680px){
+  
+  
+  
+  .page{padding:100px 16px 60px;}
+  .card{padding:16px;}
+}
+
+/* ── Unified Navbar ─────────────────────────────────────────── */
+.mn{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:transparent;border-bottom:1px solid transparent;transition:all .4s;}
+.mn.scrolled{background:rgba(12,13,16,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(196,154,60,.08);}
+.mn-logo{font-family:'Playfair Display',serif;font-size:19px;letter-spacing:.28em;background:linear-gradient(135deg,#c49a3c,#d4b96a,#c49a3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;font-weight:500;}
+.mn-links{display:flex;align-items:center;gap:32px;}
+.mn-link{color:rgba(242,237,216,.4);font-size:10px;letter-spacing:.25em;text-transform:uppercase;text-decoration:none;font-family:'Outfit',sans-serif;background:none;border:none;cursor:pointer;padding:0;transition:color .2s;}
+.mn-link:hover{color:rgba(242,237,216,.85);}
+.mn-link.mn-active{color:#c49a3c;}
+.mn-btn{color:#c49a3c;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:'Outfit',sans-serif;background:none;border:1px solid rgba(196,154,60,.25);cursor:pointer;padding:8px 18px;transition:all .2s;text-decoration:none;display:inline-block;}
+.mn-btn:hover{border-color:#c49a3c;background:rgba(196,154,60,.06);}
+.mn-ham{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;-webkit-tap-highlight-color:transparent;z-index:101;}
+.mn-hb{width:22px;height:2px;background:#c49a3c;border-radius:1px;transition:all .28s ease;}
+.mn-ham.open .mn-hb:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.mn-ham.open .mn-hb:nth-child(2){opacity:0;}
+.mn-ham.open .mn-hb:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mn-drawer{display:none;position:fixed;top:64px;left:0;right:0;background:#0c0d10;border-bottom:1px solid rgba(196,154,60,.12);z-index:99;padding:6px 0 18px;}
+.mn-drawer.open{display:block;}
+.mn-mi{display:block;padding:14px 28px;color:rgba(242,237,216,.4);font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;font-family:'Outfit',sans-serif;border:none;background:none;width:100%;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color .2s;}
+.mn-mi:hover{color:#f2edd8;}
+.mn-mi-gold{color:#c49a3c !important;}
+.mn-mi-red{color:#f87171 !important;}
+.mn-mdiv{height:1px;background:rgba(196,154,60,.08);margin:8px 24px;}
+@media(max-width:700px){.mn{padding:0 16px;}.mn-links{display:none;}.mn-ham{display:flex;}}
+
+/* ── Review modal ──────────────────────────────────────────── */
+.rv-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s;}
+.rv-modal-bg.open{opacity:1;pointer-events:all;}
+
+.rv-cat-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(242,237,216,.25);margin-bottom:4px;}
+
+
+.rv-textarea{width:100%;background:rgba(26,28,32,0.9);border:1px solid rgba(196,154,60,0.1);color:#f2edd8;padding:12px 16px;font-family:'Outfit',sans-serif;font-size:14px;resize:vertical;min-height:80px;outline:none;box-sizing:border-box;transition:border-color .2s;}
+.rv-textarea:focus{border-color:rgba(196,154,60,0.35);}
+.rv-textarea::placeholder{color:rgba(242,237,216,0.18);font-style:italic;}
+.rv-btn{padding:7px 16px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;background:transparent;border:1px solid rgba(196,154,60,.25);color:rgba(196,154,60,.7);cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;}
+.rv-btn:hover{background:rgba(196,154,60,.06);border-color:rgba(196,154,60,.5);color:#c49a3c;}
+.rv-done{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;color:#4ade80;border:1px solid rgba(74,222,128,.25);background:rgba(74,222,128,.06);pointer-events:none;}
+/* Modal responsive fixes */
+.rv-modal{background:#131518;border:1px solid rgba(196,154,60,0.15);padding:40px;width:100%;max-width:780px;position:relative;}
+.rv-cats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;}
+.rv-cat-box{background:rgba(26,28,32,0.6);border:1px solid rgba(196,154,60,0.06);padding:10px 8px;text-align:center;}
+.rv-cat-box.active{border-color:rgba(196,154,60,0.2);}
+.rv-star-row{display:flex;gap:3px;justify-content:center;margin:6px 0 3px;flex-wrap:nowrap;}
+.rv-star{background:none;border:none;cursor:pointer;font-size:22px;color:rgba(196,154,60,0.12);transition:color .12s,transform .12s;line-height:1;padding:0;-webkit-tap-highlight-color:transparent;min-width:0;}
+.rv-star.on{color:#c49a3c;}
+.rv-star:hover{transform:scale(1.1);}
+@media(max-width:420px){
+  .rv-cats-grid{grid-template-columns:1fr;}
+  .rv-star{font-size:28px;}
+  .rv-star-row{gap:8px;}
+  .rv-modal{padding:16px;}
+}
+
+/* ── Toast notification ─────────────────────────────────────── */
+.rv-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(19,21,24,0.97);border:1px solid rgba(74,222,128,0.3);color:#4ade80;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;padding:14px 28px;z-index:9999;opacity:0;transition:all 0.35s ease;white-space:nowrap;pointer-events:none;}
+.rv-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<nav class="mn" id="mainNav">
+  <a href="index.html" class="mn-logo">MAISON</a>
+  <div class="mn-links" id="mnLinks"></div>
+  <button class="mn-ham" id="mnHam" onclick="mnToggle()" aria-label="Menu">
+    <span class="mn-hb"></span><span class="mn-hb"></span><span class="mn-hb"></span>
+  </button>
+</nav>
+<div class="mn-drawer" id="mnDrawer">
+  <div class="mn-mdiv"></div>
+  <a href="index.html" class="mn-mi">Home</a>
+  <a href="book.html" class="mn-mi">Reserve</a>
+  <a href="my-bookings.html" class="mn-mi">My Bookings</a>
+  <div id="mnAdminMob"></div>
+  <div class="mn-mdiv"></div>
+  <div id="mnAuthMob"></div>
+</div>
+<div class="mob" id="mobMenu">
+  <div class="mdiv"></div>
+  <a href="index.html" class="mi">Home</a>
+  <a href="book.html" class="mi gold">Reserve a Table</a>
+  <a href="my-bookings.html" class="mi">My Bookings</a>
+  <div id="mobAdminSlot"></div>
+  <div class="mdiv"></div>
+  <div id="mobAuthSlot"></div>
+</div>
+
+<div class="page">
+  <div class="fade-up" style="margin-bottom:32px;">
+    <div class="font-mono" style="font-size:10px;letter-spacing:.5em;text-transform:uppercase;color:rgba(196,154,60,.4);margin-bottom:8px;">Your History</div>
+    <h1 class="font-display gold-text" style="font-size:clamp(28px,7vw,44px);font-weight:500;margin:0;">My Reservations</h1>
+  </div>
+
+  <div id="filterRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;"></div>
+  <div id="bookingsList"></div>
+</div>
+
+<script>
+// ── Auth ─────────────────────────────────────────────────────────────────────
+var _token = localStorage.getItem('maison_token') || '';
+var _user  = null;
+try { _user = JSON.parse(localStorage.getItem('maison_user')); } catch(e){}
+
+// If NOT logged in → show a nice "please login" page instead of redirecting
+if (!_token || !_user) {
+  document.getElementById('bookingsList').innerHTML = [
+    '<div style="text-align:center;padding:60px 20px;">',
+    '<div style="font-size:48px;margin-bottom:16px;">🔒</div>',
+    '<div class="font-display gold-text" style="font-size:28px;margin-bottom:12px;">Sign In Required</div>',
+    '<p style="color:rgba(242,237,216,.35);font-size:14px;margin-bottom:32px;">Please sign in to view your reservations.</p>',
+    '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">',
+    '<a href="login.html" class="btn-gold">Sign In</a>',
+    '<a href="register.html" class="btn-gold" style="background:transparent;border:1px solid rgba(196,154,60,.3);color:#c49a3c;">Create Account</a>',
+    '</div></div>'
+  ].join('');
+  // Still render nav as logged-out
+} else {
+  loadBookings();
+}
+
+// ── Navbar scroll ─────────────────────────────────────────────────────────────
+window.addEventListener('scroll', function(){
+  document.getElementById('sitenav').classList.toggle('bg', window.scrollY > 20);
+});
+
+// ── Render navbar ─────────────────────────────────────────────────────────────
+
+var bookings = [];
+var reviewedIds = [];
+var currentFilter = 'all';
+var filters = ['all','upcoming','completed','cancelled'];
+var badgeClass = {confirmed:'b-confirmed',pending:'b-pending',completed:'b-completed',cancelled:'b-cancelled',seated:'b-seated'};
+var occasions = {birthday:'🎂 Birthday',anniversary:'💍 Anniversary',business:'💼 Business',other:'✨ Special'};
+
+function fmtDate(d) {
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', {weekday:'short',day:'numeric',month:'short',year:'numeric'});
+}
+
+function renderFilters() {
+  document.getElementById('filterRow').innerHTML = filters.map(function(f){
+    return '<button onclick="setFilter(\'' + f + '\')" class="filter-btn' + (currentFilter===f?' on':'') + '">' + f + '</button>';
+  }).join('');
+}
+
+function setFilter(f) { currentFilter = f; renderFilters(); renderBookings(); }
+
+function renderBookings() {
+  var today = new Date().toISOString().split('T')[0];
+  var list = bookings.filter(function(b){
+    if (currentFilter==='upcoming')  return b.reservation_date >= today && !['cancelled','completed'].includes(b.status);
+    if (currentFilter==='completed') return b.status === 'completed';
+    if (currentFilter==='cancelled') return b.status === 'cancelled';
+    return true;
+  }).sort(function(a,b){ return b.reservation_date.localeCompare(a.reservation_date); });
+
+  var el = document.getElementById('bookingsList');
+  if (!list.length) {
+    el.innerHTML = '<div style="text-align:center;padding:64px 20px;" class="fade-up">' +
+      '<div style="font-size:44px;margin-bottom:16px;">🕯</div>' +
+      '<div class="font-display" style="font-size:22px;color:rgba(242,237,216,.2);margin-bottom:24px;">' +
+        (currentFilter==='all' ? 'No reservations yet' : 'Nothing here') + '</div>' +
+      (currentFilter==='all' ? '<a href="book.html" class="btn-gold">Make Your First Reservation</a>' : '') +
+      '</div>';
+    return;
+  }
+
+  el.innerHTML = list.map(function(b, i){
+    var canCancel = ['confirmed','pending'].includes(b.status);
+    var occ = occasions[b.occasion] || '';
+    var bc  = badgeClass[b.status] || '';
+    return '<div class="card fade-up" style="animation-delay:' + (i*60) + 'ms">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px;">' +
+        '<div>' +
+          '<div class="font-mono" style="font-size:11px;color:rgba(196,154,60,.7);margin-bottom:4px;">' + b.booking_ref + '</div>' +
+          (occ ? '<div style="font-size:11px;color:rgba(242,237,216,.2);">' + occ + '</div>' : '') +
+        '</div>' +
+        '<span class="badge ' + bc + '">' + b.status + '</span>' +
+      '</div>' +
+      '<div class="font-display" style="font-size:18px;color:rgba(242,237,216,.85);margin-bottom:10px;">' + b.guest_name + '</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:rgba(242,237,216,.3);margin-bottom:' + (b.special_requests||canCancel ? '12' : '0') + 'px;">' +
+        '<span>📅 ' + fmtDate(b.reservation_date) + '</span>' +
+        '<span>🕐 ' + b.reservation_time + '</span>' +
+        '<span>👥 ' + b.party_size + ' guest' + (b.party_size>1?'s':'') + '</span>' +
+      '</div>' +
+      (b.special_requests ? '<div style="font-size:12px;color:rgba(242,237,216,.2);font-style:italic;padding:10px 14px;border-left:2px solid rgba(196,154,60,.15);margin-bottom:12px;">"' + b.special_requests + '"</div>' : '') +
+      (canCancel ? '<div style="display:flex;justify-content:flex-end;"><button onclick="cancelBooking(' + b.id + ')" class="cancel-btn">Cancel Reservation</button></div>' : '') +
+      (b.status === 'completed'
+        ? '<div style="display:flex;justify-content:flex-end;margin-top:10px;">' +
+            (reviewedIds.map(function(x){return parseInt(x);}).includes(parseInt(b.id))
+              ? '<span class="rv-done"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#4ade80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Reviewed</span>'
+              : '<button onclick="openRvModal(' + b.id + ',\'' + b.booking_ref + '\',\'' + b.reservation_date + '\',\'' + b.reservation_time + '\')" class="rv-btn">★ Leave a Review</button>'
+            ) + '</div>'
+        : '') +
+    '</div>';
+  }).join('');
+}
+
+async function cancelBooking(id) {
+  if (!confirm('Cancel this reservation?')) return;
+  try {
+    var res  = await fetch('api/cancel-booking?t=' + encodeURIComponent(_token), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({_token:_token, booking_id:id})
+    });
+    var data = await res.json();
+    if (!data.success) { alert(data.message || 'Failed to cancel'); return; }
+    var b = bookings.find(function(x){ return x.id == id; });
+    if (b) b.status = 'cancelled';
+    renderBookings();
+  } catch(e) { alert('Could not cancel. Please try again.'); }
+}
+
+async function loadBookings() {
+  document.getElementById('bookingsList').innerHTML =
+    '<div style="text-align:center;padding:80px 0;font-family:\'JetBrains Mono\',monospace;font-size:11px;letter-spacing:.3em;color:rgba(242,237,216,.2);">LOADING…</div>';
+  try {
+    var res  = await fetch('api/get-bookings?t=' + encodeURIComponent(_token), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({_token:_token})
+    });
+    var data = await res.json();
+    if (!data.success) {
+      document.getElementById('bookingsList').innerHTML =
+        '<div style="text-align:center;padding:60px;color:#f87171;">' + (data.message||'Failed to load') + '</div>';
+      return;
+    }
+    bookings = data.data.bookings || [];
+    // Fetch which bookings user already reviewed
+    try {
+      var rv = await fetch('api/check-reviews?t=' + encodeURIComponent(_token), {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({_token:_token})
+      });
+      var rvd = await rv.json();
+      reviewedIds = (rvd.success && rvd.data) ? rvd.data.reviewed_booking_ids : [];
+    } catch(e) { reviewedIds = []; }
+    renderFilters();
+    renderBookings();
+  } catch(e) {
+    document.getElementById('bookingsList').innerHTML =
+      '<div style="text-align:center;padding:60px;color:#f87171;">Could not connect to server. Please try again.</div>';
+  }
+}
+
+renderFilters();
+</script>
+<script>
+// ── Review modal ──────────────────────────────────────────────
+var rvBookingId = 0;
+var rvCats      = {food:0, service:0, ambience:0};
+var rvLabels    = {1:'Poor', 2:'Fair', 3:'Good', 4:'Very Good', 5:'Excellent'};
+var rvPrefixes  = {
+  food:     {1:'Disappointing',2:'Could be better',3:'Decent',4:'Delicious!',5:'Absolutely amazing!'},
+  service:  {1:'Very poor',2:'Needs improvement',3:'Satisfactory',4:'Attentive & warm',5:'Exceptional!'},
+  ambience: {1:'Not pleasant',2:'Average',3:'Nice',4:'Beautiful setting',5:'Perfect atmosphere!'}
+};
+var rvQuotes = [
+  '"Your honest words help us serve every guest better."',
+  '"Every review shapes a better dining experience."',
+  '"Thank you for dining with us — your voice matters."',
+  '"Great meals deserve great stories. Share yours."',
+  '"Your feedback is our greatest ingredient."'
+];
+var rvPlaceholders = {
+  5: "Amazing! What made your evening so special?",
+  4: "What did you enjoy most about your visit?",
+  3: "What could we have done to make it even better?",
+  2: "Sorry it was not perfect. What went wrong?",
+  1: "We sincerely apologize. Please tell us what happened."
+};
+
+function openRvModal(id, ref, date, time) {
+  rvBookingId   = id;
+  rvCats        = {food:0, service:0, ambience:0};
+
+  document.getElementById('rvInfo').textContent = ref + '  ·  ' + date + '  ·  ' + time;
+  document.getElementById('rvComment').value    = '';
+  document.getElementById('rvComment').placeholder = 'What made your evening special? (optional)';
+  document.getElementById('rvChars').textContent   = '0 / 300';
+  document.getElementById('rvOverallDisplay').textContent = '—';
+  document.getElementById('rvMsg').style.display   = 'none';
+  document.getElementById('rvSubmitBtn').textContent = 'Submit Review';
+  document.getElementById('rvSubmitBtn').disabled    = false;
+  document.getElementById('rvSubmitBtn').style.display = '';
+
+  // Random motivational quote
+  document.getElementById('rvQuote').textContent =
+    rvQuotes[Math.floor(Math.random() * rvQuotes.length)];
+
+  // Reset all stars and labels
+  ['food','service','ambience'].forEach(function(cat) {
+    var prefix = {food:'f',service:'s',ambience:'a'}[cat];
+    for (var i = 1; i <= 5; i++) document.getElementById(prefix+'s'+i).classList.remove('on');
+    document.getElementById('lbl-'+cat).textContent = '';
+    document.getElementById('catBox-'+cat).classList.remove('active');
+  });
+
+  document.getElementById('rvBg').classList.add('open');
+}
+
+function closeRvModal() {
+  document.getElementById('rvBg').classList.remove('open');
+}
+
+document.getElementById('rvBg').addEventListener('click', function(e){
+  if (e.target === this) closeRvModal();
+});
+
+function setCat(cat, n) {
+  rvCats[cat] = n;
+  var prefix = {food:'f', service:'s', ambience:'a'}[cat];
+  for (var i = 1; i <= 5; i++) {
+    document.getElementById(prefix+'s'+i).classList.toggle('on', i <= n);
+  }
+  document.getElementById('lbl-'+cat).textContent = rvPrefixes[cat][n] || '';
+  document.getElementById('catBox-'+cat).classList.add('active');
+
+  // Update overall display
+  var rated = Object.values(rvCats).filter(function(v){ return v > 0; });
+  if (rated.length > 0) {
+    var avg = rated.reduce(function(a,b){ return a+b; }, 0) / rated.length;
+    document.getElementById('rvOverallDisplay').textContent = avg.toFixed(1) + ' ★';
+  }
+
+  // Update comment placeholder based on avg
+  var allRated = Object.values(rvCats).filter(function(v){ return v > 0; });
+  if (allRated.length > 0) {
+    var avgAll = Math.round(allRated.reduce(function(a,b){ return a+b; },0) / allRated.length);
+    document.getElementById('rvComment').placeholder = rvPlaceholders[avgAll] || 'Tell us about your experience... (optional)';
+  }
+}
+
+function rvCharCount() {
+  var len = document.getElementById('rvComment').value.length;
+  var el  = document.getElementById('rvChars');
+  el.textContent = len + ' / 300';
+  el.style.color = len > 270 ? '#fbbf24' : 'rgba(242,237,216,.15)';
+}
+
+async function submitRv() {
+  // At least one category must be rated
+  var rated = Object.values(rvCats).filter(function(v){ return v > 0; });
+  if (rated.length === 0) { showRvMsg('Please rate at least one category (Food, Service, or Ambience)', 'error'); return; }
+
+  var comment = document.getElementById('rvComment').value.trim();
+  // Comment is optional — no validation needed
+
+  // Calculate overall = average of rated categories
+  var overall = Math.round(rated.reduce(function(a,b){ return a+b; },0) / rated.length);
+
+  var btn = document.getElementById('rvSubmitBtn');
+  btn.textContent = 'Submitting…';
+  btn.disabled    = true;
+
+  try {
+    var res  = await fetch('api/submit-review?t=' + encodeURIComponent(_token), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        _token:          _token,
+        booking_id:      rvBookingId,
+        rating:          overall,
+        food_rating:     rvCats.food     || null,
+        service_rating:  rvCats.service  || null,
+        ambience_rating: rvCats.ambience || null,
+        comment:         comment
+      })
+    });
+    var data = await res.json();
+    btn.textContent = 'Submit Review';
+    btn.disabled    = false;
+
+    if (data.success) {
+      reviewedIds.push(parseInt(rvBookingId));
+      renderBookings();
+      closeRvModal();
+      showToast('Review submitted! ✓ Awaiting admin approval.');
+    } else {
+      showRvMsg(data.message || 'Failed to submit', 'error');
+    }
+  } catch(e) {
+    btn.textContent = 'Submit Review';
+    btn.disabled    = false;
+    showRvMsg('No connection. Please try again.', 'error');
+  }
+}
+
+function showRvMsg(msg, type) {
+  var el = document.getElementById('rvMsg');
+  el.textContent  = msg;
+  el.style.display = 'block';
+  el.style.color   = type === 'success' ? '#4ade80' : '#f87171';
+  el.style.background = type === 'success' ? 'rgba(74,222,128,0.05)' : 'rgba(248,113,113,0.05)';
+  el.style.border  = '1px solid ' + (type === 'success' ? 'rgba(74,222,128,0.1)' : 'rgba(248,113,113,0.1)');
+}
+</script>
+
+<script>
+(function initNav(){
+  var base=window.location.pathname.indexOf('/admin/')>-1?'../':'';
+  var token=localStorage.getItem('maison_token')||'';
+  var user=null;
+  try{user=JSON.parse(localStorage.getItem('maison_user'));}catch(e){}
+  var isAdmin=user&&user.role==='admin';
+  var page=window.location.pathname.split('/').pop()||'index.html';
+  function lnk(href,label,active){return '<a href="'+base+href+'" class="mn-link'+(active?' mn-active':'')+'" >'+label+'</a>';}
+  var desk=document.getElementById('mnLinks');
+  var mobAuth=document.getElementById('mnAuthMob');
+  var mobAdmin=document.getElementById('mnAdminMob');
+  if(user&&token){
+    desk.innerHTML=
+      lnk('index.html','Home',page==='index.html')+
+      lnk('book.html','Reserve',page==='book.html')+
+      lnk('menu.html','Menu',page==='menu.html')+
+      lnk('my-bookings.html','Bookings',page==='my-bookings.html')+
+      lnk('profile.html','Profile',page==='profile.html')+
+      lnk('about.html','About',page==='about.html')+
+      (isAdmin?lnk('admin/index.html','Admin',false):'')+
+      '<button onclick="mnSignOut()" class="mn-btn">Sign Out</button>';
+    if(mobAdmin&&isAdmin)mobAdmin.innerHTML='<a href="'+base+'admin/index.html" class="mn-mi mn-mi-gold">Admin Panel</a>';
+    if(mobAuth)mobAuth.innerHTML='<button onclick="mnSignOut()" class="mn-mi mn-mi-red">Sign Out</button>';
+  }else{
+    desk.innerHTML=
+      lnk('index.html','Home',page==='index.html')+
+      lnk('book.html','Reserve',page==='book.html')+
+      lnk('menu.html','Menu',page==='menu.html')+
+      lnk('about.html','About',page==='about.html')+
+      '<a href="'+base+'login.html" class="mn-btn">Sign In</a>';
+    if(mobAuth)mobAuth.innerHTML='<a href="'+base+'login.html" class="mn-mi mn-mi-gold">Sign In</a><a href="'+base+'register.html" class="mn-mi">Create Account</a>';
+  }
+  document.querySelectorAll('.mn-drawer a[href]').forEach(function(a){
+    var h=a.getAttribute('href');
+    if(h&&!h.startsWith('http')&&!h.startsWith(base)&&base)a.href=base+h;
+  });
+})();
+function mnToggle(){document.getElementById('mnHam').classList.toggle('open');document.getElementById('mnDrawer').classList.toggle('open');}
+document.addEventListener('click',function(e){var h=document.getElementById('mnHam'),d=document.getElementById('mnDrawer');if(h&&d&&!h.contains(e.target)&&!d.contains(e.target)){h.classList.remove('open');d.classList.remove('open');}});
+window.addEventListener('scroll',function(){document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>10);});
+function mnSignOut(){localStorage.removeItem('maison_token');localStorage.removeItem('maison_user');window.location.href=(window.location.pathname.indexOf('/admin/')>-1?'../':'')+'index.html';}
+</script>
+
+<!-- Review Modal -->
+<div class="rv-modal-bg" id="rvBg">
+  <div class="rv-modal">
+
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+      <div>
+        <div class="font-mono" style="font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:rgba(196,154,60,.4);margin-bottom:4px;">Rate Your Visit</div>
+        <div class="font-display gold-text" style="font-size:20px;font-weight:500;">Leave a Review</div>
+      </div>
+      <button onclick="closeRvModal()" style="background:none;border:none;color:rgba(242,237,216,.3);font-size:24px;cursor:pointer;line-height:1;padding:2px 6px;">×</button>
+    </div>
+
+    <!-- Booking info -->
+    <div id="rvInfo" style="background:rgba(196,154,60,.04);border:1px solid rgba(196,154,60,.08);padding:10px 14px;margin-bottom:16px;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(242,237,216,.3);"></div>
+
+    <!-- Motivational quote -->
+    <div id="rvQuote" style="text-align:center;font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:rgba(196,154,60,.35);margin-bottom:16px;padding:0 8px;"></div>
+
+    <!-- Category ratings: Food, Service, Ambience — stacked rows, fully responsive -->
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+
+      <!-- Food -->
+      <div class="rv-cat-box" id="catBox-food" style="display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:12px 14px;">
+        <div style="display:flex;align-items:center;gap:8px;min-width:90px;">
+          <span style="font-size:18px;">🍽️</span>
+          <div>
+            <div class="rv-cat-label" style="margin-bottom:0;">Food</div>
+            <div id="lbl-food" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(196,154,60,.5);min-height:13px;"></div>
+          </div>
+        </div>
+        <div class="rv-star-row" style="margin:0;gap:4px;">
+          <button class="rv-star" id="fs1" onclick="setCat('food',1)">★</button>
+          <button class="rv-star" id="fs2" onclick="setCat('food',2)">★</button>
+          <button class="rv-star" id="fs3" onclick="setCat('food',3)">★</button>
+          <button class="rv-star" id="fs4" onclick="setCat('food',4)">★</button>
+          <button class="rv-star" id="fs5" onclick="setCat('food',5)">★</button>
+        </div>
+      </div>
+
+      <!-- Service -->
+      <div class="rv-cat-box" id="catBox-service" style="display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:12px 14px;">
+        <div style="display:flex;align-items:center;gap:8px;min-width:90px;">
+          <span style="font-size:18px;">🤝</span>
+          <div>
+            <div class="rv-cat-label" style="margin-bottom:0;">Service</div>
+            <div id="lbl-service" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(196,154,60,.5);min-height:13px;"></div>
+          </div>
+        </div>
+        <div class="rv-star-row" style="margin:0;gap:4px;">
+          <button class="rv-star" id="ss1" onclick="setCat('service',1)">★</button>
+          <button class="rv-star" id="ss2" onclick="setCat('service',2)">★</button>
+          <button class="rv-star" id="ss3" onclick="setCat('service',3)">★</button>
+          <button class="rv-star" id="ss4" onclick="setCat('service',4)">★</button>
+          <button class="rv-star" id="ss5" onclick="setCat('service',5)">★</button>
+        </div>
+      </div>
+
+      <!-- Ambience -->
+      <div class="rv-cat-box" id="catBox-ambience" style="display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:12px 14px;">
+        <div style="display:flex;align-items:center;gap:8px;min-width:90px;">
+          <span style="font-size:18px;">✨</span>
+          <div>
+            <div class="rv-cat-label" style="margin-bottom:0;">Ambience</div>
+            <div id="lbl-ambience" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(196,154,60,.5);min-height:13px;"></div>
+          </div>
+        </div>
+        <div class="rv-star-row" style="margin:0;gap:4px;">
+          <button class="rv-star" id="as1" onclick="setCat('ambience',1)">★</button>
+          <button class="rv-star" id="as2" onclick="setCat('ambience',2)">★</button>
+          <button class="rv-star" id="as3" onclick="setCat('ambience',3)">★</button>
+          <button class="rv-star" id="as4" onclick="setCat('ambience',4)">★</button>
+          <button class="rv-star" id="as5" onclick="setCat('ambience',5)">★</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Overall auto-calculated -->
+    <div style="background:rgba(196,154,60,.04);border:1px solid rgba(196,154,60,.08);padding:10px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(242,237,216,.25);">Overall Rating</span>
+      <span id="rvOverallDisplay" style="font-family:'Playfair Display',serif;font-size:22px;color:#c49a3c;">—</span>
+    </div>
+
+    <!-- Comment (optional) -->
+    <div class="font-mono" style="font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(242,237,216,.2);margin-bottom:6px;">
+      Your Experience <span style="text-transform:none;letter-spacing:0;color:rgba(242,237,216,.15);font-size:10px;">(optional)</span>
+    </div>
+    <textarea class="rv-textarea" id="rvComment" maxlength="300" oninput="rvCharCount()"></textarea>
+    <div id="rvChars" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(242,237,216,.15);text-align:right;margin-top:4px;">0 / 300</div>
+
+    <!-- Buttons -->
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button onclick="closeRvModal()" style="flex:1;padding:13px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:'Outfit',sans-serif;background:transparent;border:1px solid rgba(242,237,216,.08);color:rgba(242,237,216,.25);cursor:pointer;">Cancel</button>
+      <button onclick="submitRv()" id="rvSubmitBtn" style="flex:2;padding:13px;font-size:10px;letter-spacing:.25em;text-transform:uppercase;font-family:'Outfit',sans-serif;font-weight:500;background:linear-gradient(135deg,#b8903a,#c9a24a);color:#0a0b0d;border:none;cursor:pointer;">Submit Review</button>
+    </div>
+    <div id="rvMsg" style="display:none;margin-top:12px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;padding:10px;"></div>
+  </div>
+</div>
+
+<div id="rvToast" class="rv-toast">✓ Review submitted! Awaiting admin approval.</div>
+
+<script>
+function showToast(msg) {
+  var t = document.getElementById('rvToast');
+  t.textContent = msg || '✓ Review submitted!';
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3500);
+}
+</script>
+
+</body>
+</html>

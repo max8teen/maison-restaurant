@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Reports — Maison Admin</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0b0d'/><text y='26' x='4' font-size='24' fill='%23c49a3c' font-family='Georgia,serif'>M</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="admin.css"/>
+</head>
+<body>
+
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside id="sidebar">
+  <div class="sidebar-logo"><div class="logo-mark"><div class="logo-gem">M</div><div><div class="logo-text">Maison</div><div class="logo-sub">Admin Panel</div></div></div></div>
+  <div class="nav-items">
+    <div class="nav-section">Main</div>
+    <a href="index.html"        class="nav-item"><span class="nav-icon">◈</span> Dashboard</a>
+    <a href="reservations.html" class="nav-item"><span class="nav-icon">◧</span> Reservations</a>
+    <a href="tables.html"       class="nav-item"><span class="nav-icon">⬡</span> Tables</a>
+    <div class="nav-section">People</div>
+    <a href="customers.html"    class="nav-item"><span class="nav-icon">◉</span> Customers</a>
+    <div class="nav-section">Analytics</div>
+    <a href="reports.html"      class="nav-item active"><span class="nav-icon">▦</span> Reports</a>
+    <div class="nav-section">Content</div>
+    <a href="reviews.html"      class="nav-item"><span class="nav-icon">★</span> Reviews <span class="nav-badge" id="reviews-pending-badge">0</span></a>
+    <div class="nav-section">System</div>
+    <a href="settings.html"     class="nav-item"><span class="nav-icon">⚙</span> Settings</a>
+  </div>
+  <div class="sidebar-footer"><div class="user-card"><div class="avatar">A</div><div><div class="user-name" id="admin-name">Admin</div><div class="user-role">● ADMIN</div></div><button class="logout-btn" onclick="doLogout()">⇥</button></div></div>
+</aside>
+
+<div id="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger-btn" onclick="toggleSidebar()"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg></button>
+      <div><div class="topbar-title">Reports</div><div class="topbar-crumb">Maison / Reports</div></div>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="stats-grid" style="margin-bottom:20px;" id="report-stats"></div>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:20px;" class="resp-grid">
+      <div class="card">
+        <div class="card-head"><span class="card-title">Bookings by Month</span></div>
+        <div style="padding:20px;"><div class="chart-box" style="height:220px;"><canvas id="reportBarChart"></canvas></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">By Status</span></div>
+        <div style="padding:20px;"><div class="chart-box" style="height:220px;"><canvas id="reportDonutChart"></canvas></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">Peak Time Slots</span></div>
+      <div style="padding:20px;" id="time-slots"><div style="text-align:center;color:var(--muted);padding:20px;">Loading…</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="admin.js"></script>
+<script>
+let rBarChart, rDonutChart;
+
+async function loadReports() {
+  const res = await apiCall('POST', 'get-stats');
+  if (!res.success) { toast(res.message, 'error'); return; }
+  const d = res.data;
+
+  const completed = d.status_counts.completed || 0;
+  const cancelled = d.status_counts.cancelled || 0;
+  const total = d.total_bookings || 1;
+
+  document.getElementById('report-stats').innerHTML = [
+    { label: 'Total Bookings',     val: d.total_bookings,   color: 'var(--green)',  sub: 'All time' },
+    { label: 'Completed',          val: completed,           color: 'var(--purple)', sub: 'Successful stays' },
+    { label: 'Cancellation Rate',  val: Math.round(cancelled/total*100)+'%', color: 'var(--red)', sub: 'vs total' },
+    { label: 'Est. Revenue',       val: '₹'+(completed*1850/1000).toFixed(1)+'K', color: 'var(--gold)', sub: 'From completed' },
+  ].map(s => `
+    <div class="stat-card">
+      <div class="stat-stripe" style="background:linear-gradient(90deg,${s.color},transparent)"></div>
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-val" style="color:${s.color};font-size:28px;">${s.val}</div>
+      <div class="stat-sub" style="color:${s.color};">${s.sub}</div>
+    </div>`).join('');
+
+  const months = d.monthly_trend.map(m => m.month);
+  const vals   = d.monthly_trend.map(m => m.count);
+  if (rBarChart) rBarChart.destroy();
+  rBarChart = new Chart(document.getElementById('reportBarChart'), {
+    type: 'bar',
+    data: { labels: months, datasets: [{ data: vals, backgroundColor: 'rgba(201,169,110,0.7)', borderRadius: 5, borderSkipped: false, hoverBackgroundColor: 'var(--gold)' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a2230', titleColor: '#e8edf3', bodyColor: '#7d8fa3' } }, scales: { x: { grid: { display: false }, ticks: { color: '#5a6475', font: { family: 'DM Mono', size: 10 } } }, y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a6475', font: { size: 10 } } } } }
+  });
+
+  const dColors = ['rgba(62,207,142,0.8)','rgba(251,191,36,0.8)','rgba(96,165,250,0.8)','rgba(192,132,252,0.8)','rgba(248,113,113,0.8)','rgba(90,100,117,0.8)'];
+  const statusCounts = STATUSES.map(s => d.status_counts[s] || 0);
+  if (rDonutChart) rDonutChart.destroy();
+  rDonutChart = new Chart(document.getElementById('reportDonutChart'), {
+    type: 'doughnut',
+    data: { labels: STATUSES, datasets: [{ data: statusCounts, backgroundColor: dColors, borderWidth: 0, hoverOffset: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#7d8fa3', font: { size: 11, family: 'DM Mono' }, boxWidth: 10, padding: 10 } }, tooltip: { backgroundColor: '#1a2230' } } }
+  });
+
+  // Time slots from real data
+  const slots = d.time_slots || [];
+  const max = slots[0]?.count || 1;
+  document.getElementById('time-slots').innerHTML = slots.length === 0
+    ? '<div style="text-align:center;color:var(--muted);">No data yet</div>'
+    : slots.map(s => `
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+        <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);width:50px;">${s.time}</span>
+        <div style="flex:1;height:6px;background:var(--surface2);border-radius:100px;overflow:hidden;">
+          <div style="height:100%;width:${Math.round(s.count/max*100)}%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:100px;"></div>
+        </div>
+        <span style="font-size:12px;color:var(--muted2);width:80px;text-align:right;">${s.count} bookings</span>
+      </div>`).join('');
+}
+
+loadReports();
+</script>
+</body>
+</html>

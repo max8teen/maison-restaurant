@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Reservations — Maison Admin</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0b0d'/><text y='26' x='4' font-size='24' fill='%23c49a3c' font-family='Georgia,serif'>M</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="admin.css"/>
+</head>
+<body>
+
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside id="sidebar">
+  <div class="sidebar-logo"><div class="logo-mark"><div class="logo-gem">M</div><div><div class="logo-text">Maison</div><div class="logo-sub">Admin Panel</div></div></div></div>
+  <div class="nav-items">
+    <div class="nav-section">Main</div>
+    <a href="index.html"        class="nav-item"><span class="nav-icon">◈</span> Dashboard</a>
+    <a href="reservations.html" class="nav-item active"><span class="nav-icon">◧</span> Reservations <span class="nav-badge" id="pending-badge">0</span></a>
+    <a href="tables.html"       class="nav-item"><span class="nav-icon">⬡</span> Tables</a>
+    <div class="nav-section">People</div>
+    <a href="customers.html"    class="nav-item"><span class="nav-icon">◉</span> Customers</a>
+    <div class="nav-section">Analytics</div>
+    <a href="reports.html"      class="nav-item"><span class="nav-icon">▦</span> Reports</a>
+    <div class="nav-section">Content</div>
+    <a href="reviews.html"      class="nav-item"><span class="nav-icon">★</span> Reviews <span class="nav-badge" id="reviews-pending-badge">0</span></a>
+    <div class="nav-section">System</div>
+    <a href="settings.html"     class="nav-item"><span class="nav-icon">⚙</span> Settings</a>
+  </div>
+  <div class="sidebar-footer"><div class="user-card"><div class="avatar">A</div><div><div class="user-name" id="admin-name">Admin</div><div class="user-role">● ADMIN</div></div><button class="logout-btn" onclick="doLogout()">⇥</button></div></div>
+</aside>
+
+<div id="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger-btn" onclick="toggleSidebar()"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg></button>
+      <div><div class="topbar-title">Reservations</div><div class="topbar-crumb">Maison / Reservations</div></div>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn btn-gold-style" onclick="openBookingModal()">+ New Booking</button>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center;">
+      <input type="date" id="res-date-filter" class="inp" style="width:auto;" onchange="loadReservations()"/>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;" id="status-filters"></div>
+      <select id="sort-select" class="inp" style="width:auto;font-size:12px;" onchange="renderTable()">
+        <option value="date_asc">By Date &amp; Time ↑</option>
+        <option value="booked_desc">Recently Booked</option>
+        <option value="date_desc">By Date (Latest First)</option>
+        <option value="party_desc">Party Size (Largest)</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('res-date-filter').value='';activeStatusFilter='';document.getElementById('sort-select').value='date_asc';renderTable()">Clear</button>
+    </div>
+
+    <div class="card">
+      <div class="tbl-wrap">
+        <table class="data-table">
+          <thead><tr><th>Ref</th><th>Guest</th><th>Date</th><th>Time</th><th>Party</th><th>Table</th><th>Occasion</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="res-tbody"><tr><td colspan="9" style="text-align:center;color:var(--muted);padding:40px;">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Booking Modal -->
+<div class="modal-bg" id="booking-modal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">New Booking</div><button class="modal-close" onclick="closeModal('booking-modal')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Guest Name</label><input class="inp" id="bk-name" placeholder="Full name"/></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="inp" id="bk-email" type="email" placeholder="email@example.com"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Phone</label><input class="inp" id="bk-phone" placeholder="+91 7972666151"/></div>
+        <div class="form-group"><label class="form-label">Party Size</label><input class="inp" id="bk-party" type="number" min="1" max="20" value="2"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input class="inp" id="bk-date" type="date"/></div>
+        <div class="form-group"><label class="form-label">Time</label>
+          <select class="inp" id="bk-time">
+            <optgroup label="── Lunch ──">
+              <option value="12:00">12:00 PM</option>
+              <option value="12:30">12:30 PM</option>
+              <option value="13:00">1:00 PM</option>
+              <option value="13:30">1:30 PM</option>
+              <option value="14:00">2:00 PM</option>
+              <option value="14:30">2:30 PM</option>
+            </optgroup>
+            <optgroup label="── Dinner ──">
+              <option value="19:00">7:00 PM</option>
+              <option value="19:30">7:30 PM</option>
+              <option value="20:00" selected>8:00 PM</option>
+              <option value="20:30">8:30 PM</option>
+              <option value="21:00">9:00 PM</option>
+              <option value="21:30">9:30 PM</option>
+              <option value="22:00">10:00 PM</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Occasion</label>
+        <select class="inp" id="bk-occasion">
+          <option value="none">None</option><option value="birthday">Birthday</option>
+          <option value="anniversary">Anniversary</option><option value="business">Business</option><option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="inp" id="bk-notes" rows="2" placeholder="Special requests…" style="resize:vertical;"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Source</label>
+          <select class="inp" id="bk-source">
+            <option value="phone" selected>📞 Phone Call</option>
+            <option value="walk_in">🚶 Walk-in</option>
+            <option value="online">🌐 Online</option>
+          </select>
+        </div>
+        <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:6px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#8a8070;cursor:pointer;">
+            <input type="checkbox" id="bk-sendconf" checked style="width:16px;height:16px;accent-color:#c49a3c;"/>
+            Email confirmation to guest
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('booking-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBooking()">Create Booking</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="admin.js"></script>
+<script>
+let activeStatusFilter = '';
+let allReservations = [];
+
+function buildStatusFilters() {
+  document.getElementById('status-filters').innerHTML =
+    ['','confirmed','pending','seated','completed','cancelled','no_show'].map(s => `
+      <button onclick="activeStatusFilter='${s}';buildStatusFilters();renderTable()" style="
+        background:${activeStatusFilter===s?(s?`${STATUS_COLORS[s]}22`:'var(--surface3)'):'transparent'};
+        border:1px solid ${activeStatusFilter===s?(s?STATUS_COLORS[s]:'var(--border2)'):'var(--border)'};
+        color:${activeStatusFilter===s?(s?STATUS_COLORS[s]:'var(--text)'):'var(--muted2)'};
+        border-radius:100px;font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;padding:4px 12px;
+      ">${s||'All'}</button>`).join('');
+}
+
+async function loadReservations() {
+  const res = await apiCall('POST', 'get-all-reservations');
+  if (!res.success) { toast(res.message, 'error'); return; }
+  allReservations = res.data.reservations || [];
+  document.getElementById('pending-badge').textContent = allReservations.filter(r => r.status === 'pending').length;
+  renderTable();
+}
+
+function toAMPM(t) {
+  if (!t) return '';
+  const [h, m] = t.split(':').map(Number);
+  const p = h >= 12 ? 'PM' : 'AM';
+  return (h % 12 || 12) + ':' + String(m).padStart(2,'0') + ' ' + p;
+}
+
+function renderTable() {
+  const dateF = document.getElementById('res-date-filter').value;
+  const sort  = document.getElementById('sort-select').value;
+  let list = [...allReservations];
+  if (dateF) list = list.filter(r => r.reservation_date === dateF);
+  if (activeStatusFilter) list = list.filter(r => r.status === activeStatusFilter);
+
+  // Sorting
+  if (sort === 'booked_desc') {
+    list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  } else if (sort === 'date_asc') {
+    list.sort((a, b) => a.reservation_date.localeCompare(b.reservation_date) || a.reservation_time.localeCompare(b.reservation_time));
+  } else if (sort === 'date_desc') {
+    list.sort((a, b) => b.reservation_date.localeCompare(a.reservation_date) || b.reservation_time.localeCompare(a.reservation_time));
+  } else if (sort === 'party_desc') {
+    list.sort((a, b) => b.party_size - a.party_size);
+  }
+
+  document.getElementById('res-tbody').innerHTML = list.length === 0
+    ? '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:40px;">No reservations found</td></tr>'
+    : list.map(r => `
+      <tr>
+        <td><span style="color:var(--blue);font-family:'DM Mono',monospace;font-size:12px;">${r.booking_ref}</span></td>
+        <td><div style="font-weight:500;">${r.guest_name}</div><div style="font-size:11px;color:var(--muted2);">${r.guest_email}</div></td>
+        <td style="font-family:'DM Mono',monospace;font-size:12px;">${r.reservation_date}</td>
+        <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--green);">${toAMPM(r.reservation_time)}</td>
+        <td>${r.party_size}</td>
+        <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);">${r.table_id ? 'T-'+String(r.table_id).padStart(2,'0') : '—'}</td>
+        <td style="font-size:12px;color:var(--muted2);text-transform:capitalize;">${!r.occasion||r.occasion==='none'?'—':r.occasion}</td>
+        <td><span class="pill ${STATUS_PILL[r.status]||'pill-muted'}">${r.status}</span></td>
+        <td>
+          <select onchange="updateStatus(${r.id},this.value);this.value=''" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 8px;color:var(--muted2);font-size:11px;cursor:pointer;outline:none;font-family:'DM Sans',sans-serif;">
+            <option value="">Update…</option>
+            ${STATUSES.map(s=>`<option value="${s}">${s}</option>`).join('')}
+          </select>
+        </td>
+      </tr>`).join('');
+}
+
+async function updateStatus(id, status) {
+  if (!status) return;
+  if (status === 'no_show') {
+    if (!confirm('Mark as no-show? This will increment the guest\'s no-show counter. 3 strikes = account blocked.')) return;
+  }
+  const res = await apiCall('POST', 'update-reservation', { id, status });
+  if (!res.success) { toast(res.message, 'error'); return; }
+  toast('Status updated to ' + status);
+  if (status === 'no_show' && res.data && res.data.user_blocked) {
+    toast('⚠️ Guest account has been blocked after ' + res.data.no_show_count + ' no-shows.', 'warn');
+  }
+  loadReservations();
+}
+
+function openBookingModal() {
+  document.getElementById('bk-date').value = new Date().toISOString().split('T')[0];
+  openModal('booking-modal');
+}
+
+async function saveBooking() {
+  const name = document.getElementById('bk-name').value.trim();
+  const date = document.getElementById('bk-date').value;
+  const email = document.getElementById('bk-email').value.trim();
+  if (!name || !date) { toast('Name and date are required', 'error'); return; }
+
+  const res = await apiCall('POST', 'create-booking', {
+    guest_name:        name,
+    guest_email:       email,
+    guest_phone:       document.getElementById('bk-phone').value,
+    reservation_date:  date,
+    reservation_time:  document.getElementById('bk-time').value,
+    party_size:        parseInt(document.getElementById('bk-party').value) || 2,
+    occasion:          document.getElementById('bk-occasion').value,
+    special_requests:  document.getElementById('bk-notes').value,
+    source:            document.getElementById('bk-source')?.value   || 'phone',
+    send_confirmation: document.getElementById('bk-sendconf')?.checked ?? false,
+  });
+
+  if (!res.success) { toast(res.message, 'error'); return; }
+  closeModal('booking-modal');
+  toast('Booking created: ' + res.data.booking_ref);
+  loadReservations();
+}
+
+buildStatusFilters();
+loadReservations();
+</script>
+</body>
+</html>

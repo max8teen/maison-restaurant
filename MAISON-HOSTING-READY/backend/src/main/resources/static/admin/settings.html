@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Settings — Maison Admin</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0b0d'/><text y='26' x='4' font-size='24' fill='%23c49a3c' font-family='Georgia,serif'>M</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="admin.css"/>
+</head>
+<body>
+
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside id="sidebar">
+  <div class="sidebar-logo"><div class="logo-mark"><div class="logo-gem">M</div><div><div class="logo-text">Maison</div><div class="logo-sub">Admin Panel</div></div></div></div>
+  <div class="nav-items">
+    <div class="nav-section">Main</div>
+    <a href="index.html"        class="nav-item"><span class="nav-icon">◈</span> Dashboard</a>
+    <a href="reservations.html" class="nav-item"><span class="nav-icon">◧</span> Reservations</a>
+    <a href="tables.html"       class="nav-item"><span class="nav-icon">⬡</span> Tables</a>
+    <div class="nav-section">People</div>
+    <a href="customers.html"    class="nav-item"><span class="nav-icon">◉</span> Customers</a>
+    <div class="nav-section">Analytics</div>
+    <a href="reports.html"      class="nav-item"><span class="nav-icon">▦</span> Reports</a>
+    <div class="nav-section">Content</div>
+    <a href="reviews.html"      class="nav-item"><span class="nav-icon">★</span> Reviews <span class="nav-badge" id="reviews-pending-badge">0</span></a>
+    <div class="nav-section">System</div>
+    <a href="settings.html"     class="nav-item active"><span class="nav-icon">⚙</span> Settings</a>
+  </div>
+  <div class="sidebar-footer"><div class="user-card"><div class="avatar">A</div><div><div class="user-name" id="admin-name">Admin</div><div class="user-role">● ADMIN</div></div><button class="logout-btn" onclick="doLogout()">⇥</button></div></div>
+</aside>
+
+<div id="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger-btn" onclick="toggleSidebar()"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg></button>
+      <div><div class="topbar-title">Settings</div><div class="topbar-crumb">Maison / Settings</div></div>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;" class="resp-grid">
+
+      <!-- Restaurant Info -->
+      <div class="card">
+        <div class="card-head"><span class="card-title">Restaurant Info</span></div>
+        <div style="padding:16px 20px;">
+          <div class="form-group"><label class="form-label">Restaurant Name</label><input class="inp" value="Maison" id="set-name"/></div>
+          <div class="form-group"><label class="form-label">Address</label><input class="inp" value="Anand Nagar, Thane, Maharashtra, India" id="set-address"/></div>
+          <div class="form-group"><label class="form-label">Phone</label><input class="inp" value="+91 7972666151" id="set-phone"/></div>
+          <div class="form-group"><label class="form-label">Email</label><input class="inp" value="reservations@maison.com" id="set-email"/></div>
+          <button class="btn btn-primary" onclick="toast('Settings saved')">Save Changes</button>
+        </div>
+      </div>
+
+      <!-- Opening Hours -->
+      <div class="card">
+        <div class="card-head"><span class="card-title">Opening Hours</span></div>
+        <div style="padding:4px 20px 16px;">
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">Lunch Service</div><div class="setting-desc">Midday dining hours</div></div>
+            <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--green);">12:00 – 15:00</span>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">Dinner Service</div><div class="setting-desc">Evening dining hours</div></div>
+            <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--green);">19:00 – 23:00</span>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">Closed On</div><div class="setting-desc">Weekly day off</div></div>
+            <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--red);">Monday</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="card">
+        <div class="card-head"><span class="card-title">Notifications</span></div>
+        <div style="padding:4px 20px 12px;">
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">Email Confirmations</div><div class="setting-desc">Send booking confirmation emails</div></div>
+            <div class="toggle on" onclick="toggleThis(this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">SMS Alerts</div><div class="setting-desc">Text message notifications</div></div>
+            <div class="toggle off" onclick="toggleThis(this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">Auto-Confirm Bookings</div><div class="setting-desc">Skip manual approval</div></div>
+            <div class="toggle off" onclick="toggleThis(this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">Review Requests</div><div class="setting-desc">Request guest reviews post-visit</div></div>
+            <div class="toggle on" onclick="toggleThis(this)"><div class="toggle-knob"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Rules -->
+      <div class="card">
+        <div class="card-head"><span class="card-title">Booking Rules</span></div>
+        <div style="padding:4px 20px 12px;">
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">Require Deposit</div><div class="setting-desc">Collect deposit on reservation</div></div>
+            <div class="toggle on" onclick="toggleThis(this)"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">Deposit Amount (₹)</div><div class="setting-desc">Amount per booking</div></div>
+            <input class="inp" type="number" value="500" style="width:90px;text-align:center;"/>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">Max Party Size</div><div class="setting-desc">Largest group accepted</div></div>
+            <input class="inp" type="number" value="12" style="width:90px;text-align:center;"/>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info"><div class="setting-name">Advance Booking Days</div><div class="setting-desc">How far ahead guests can book</div></div>
+            <input class="inp" type="number" value="60" style="width:90px;text-align:center;"/>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="admin.js"></script>
+<script>
+function toggleThis(el) {
+  const isOn = el.classList.contains('on');
+  el.classList.toggle('on', !isOn);
+  el.classList.toggle('off', isOn);
+  toast('Setting ' + (isOn ? 'disabled' : 'enabled'), 'info');
+}
+</script>
+</body>
+</html>

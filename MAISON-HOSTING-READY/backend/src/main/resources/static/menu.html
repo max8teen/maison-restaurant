@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Menu — Maison Fine Dining Thane</title>
+<meta name="description" content="Explore the Maison menu — seasonal starters, handcrafted mains, and desserts. Fine dining cuisine in Thane, Maharashtra."/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@200;300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config={theme:{extend:{colors:{ink:{DEFAULT:'#0a0b0d',light:'#131518',elevated:'#1a1c20'},cream:{DEFAULT:'#f2edd8',dim:'#ccc4a8'},gold:{DEFAULT:'#c49a3c',light:'#caa94f',dim:'#7a6a35'}}}}}
+</script>
+<style>
+*{box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:#0a0b0d;color:#f2edd8;-webkit-font-smoothing:antialiased;margin:0;}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;}
+.font-display{font-family:'Playfair Display',serif;}
+.font-mono-dm{font-family:'JetBrains Mono',monospace;}
+.text-gradient-gold{background:linear-gradient(135deg,#c49a3c,#d4b96a,#c49a3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hr-gold{height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,0.5),transparent);border:none;}
+.noise::before{content:'';position:absolute;inset:0;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;}
+.glass-light{background:rgba(242,237,216,0.03);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(242,237,216,0.06);}
+::selection{background:rgba(196,154,60,0.3);color:#f2edd8;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.fade-up{animation:fadeUp 0.6s ease both;}
+
+/* Category tabs */
+.cat-tab{padding:10px 24px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;background:transparent;border:1px solid rgba(196,154,60,.15);color:rgba(242,237,216,.3);cursor:pointer;transition:all .25s;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
+.cat-tab:hover{border-color:rgba(196,154,60,.4);color:rgba(242,237,216,.7);}
+.cat-tab.active{background:rgba(196,154,60,.08);border-color:#c49a3c;color:#c49a3c;}
+
+/* Menu card */
+.menu-card{background:rgba(26,28,32,.5);border:1px solid rgba(196,154,60,.07);transition:border-color .3s,transform .3s;overflow:hidden;}
+.menu-card:hover{border-color:rgba(196,154,60,.25);transform:translateY(-3px);}
+.menu-img{width:100%;height:200px;object-fit:cover;display:block;}
+.menu-img-placeholder{width:100%;height:200px;background:linear-gradient(135deg,#1a1c20,#131518);display:flex;align-items:center;justify-content:center;font-size:52px;}
+
+/* Veg / Non-veg indicator */
+.veg-dot{width:12px;height:12px;border-radius:2px;border:1.5px solid #4ade80;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.veg-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:#4ade80;display:block;}
+.nonveg-dot{width:12px;height:12px;border-radius:2px;border:1.5px solid #f87171;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.nonveg-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:#f87171;display:block;}
+
+/* Spice level */
+.spice{font-size:11px;letter-spacing:.02em;}
+
+/* Navbar */
+.mn{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:transparent;border-bottom:1px solid transparent;transition:all .4s;}
+.mn.scrolled{background:rgba(12,13,16,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(196,154,60,.08);}
+.mn-logo{font-family:'Playfair Display',serif;font-size:19px;letter-spacing:.28em;background:linear-gradient(135deg,#c49a3c,#d4b96a,#c49a3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;font-weight:500;}
+.mn-links{display:flex;align-items:center;gap:32px;}
+.mn-link{color:rgba(242,237,216,.4);font-size:10px;letter-spacing:.25em;text-transform:uppercase;text-decoration:none;font-family:'Outfit',sans-serif;background:none;border:none;cursor:pointer;padding:0;transition:color .2s;}
+.mn-link:hover{color:rgba(242,237,216,.85);}
+.mn-link.mn-active{color:#c49a3c;}
+.mn-btn{color:#c49a3c;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:'Outfit',sans-serif;background:none;border:1px solid rgba(196,154,60,.25);cursor:pointer;padding:8px 18px;transition:all .2s;text-decoration:none;display:inline-block;}
+.mn-btn:hover{border-color:#c49a3c;background:rgba(196,154,60,.06);}
+.mn-ham{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;-webkit-tap-highlight-color:transparent;z-index:101;}
+.mn-hb{width:22px;height:2px;background:#c49a3c;border-radius:1px;transition:all .28s ease;}
+.mn-ham.open .mn-hb:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.mn-ham.open .mn-hb:nth-child(2){opacity:0;}
+.mn-ham.open .mn-hb:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mn-drawer{display:none;position:fixed;top:64px;left:0;right:0;background:#0c0d10;border-bottom:1px solid rgba(196,154,60,.12);z-index:99;padding:6px 0 18px;}
+.mn-drawer.open{display:block;}
+.mn-mi{display:block;padding:14px 28px;color:rgba(242,237,216,.4);font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;font-family:'Outfit',sans-serif;border:none;background:none;width:100%;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color .2s;}
+.mn-mi:hover{color:#f2edd8;}
+.mn-mi-gold{color:#c49a3c !important;}
+.mn-mi-red{color:#f87171 !important;}
+.mn-mdiv{height:1px;background:rgba(196,154,60,.08);margin:8px 24px;}
+@media(max-width:700px){.mn{padding:0 16px;}.mn-links{display:none;}.mn-ham{display:flex;}}
+
+/* Tabs scroll on mobile */
+.tabs-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.tabs-scroll::-webkit-scrollbar{display:none;}
+</style>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0b0d'/><text y='26' x='4' font-size='24' fill='%23c49a3c' font-family='Georgia,serif'>M</text></svg>"/>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="mn" id="mainNav">
+  <a href="index.html" class="mn-logo">MAISON</a>
+  <div class="mn-links" id="mnLinks"></div>
+  <button class="mn-ham" id="mnHam" onclick="mnToggle()" aria-label="Menu">
+    <span class="mn-hb"></span><span class="mn-hb"></span><span class="mn-hb"></span>
+  </button>
+</nav>
+<div class="mn-drawer" id="mnDrawer">
+  <div class="mn-mdiv"></div>
+  <a href="index.html" class="mn-mi">Home</a>
+  <a href="menu.html" class="mn-mi mn-active">Menu</a>
+  <a href="book.html" class="mn-mi">Reserve</a>
+  <a href="my-bookings.html" class="mn-mi">My Bookings</a>
+  <div id="mnAdminMob"></div>
+  <div class="mn-mdiv"></div>
+  <div id="mnAuthMob"></div>
+</div>
+
+<!-- Hero -->
+<section class="relative pt-[clamp(100px,14vw,140px)] pb-16 px-6 text-center overflow-hidden">
+  <div class="absolute inset-0" style="background:radial-gradient(ellipse at 50% 0%,rgba(196,154,60,0.08),transparent 60%)"></div>
+  <div class="absolute inset-0 noise"></div>
+  <div class="relative z-10">
+    <div class="font-mono-dm text-[10px] tracking-[0.6em] uppercase text-gold/50 mb-4">Maison Fine Dining</div>
+    <h1 class="font-display text-[clamp(40px,9vw,80px)] font-medium leading-tight mb-4">
+      <span class="text-gradient-gold">Our Menu</span>
+    </h1>
+    <div class="hr-gold w-16 mx-auto mb-6"></div>
+    <p class="text-cream/30 text-sm max-w-md mx-auto leading-relaxed font-light tracking-wide">
+      Rooted in Indian tradition, refined for the modern palate. Every dish tells a story of spice, heritage and craft.
+    </p>
+    <!-- Legend -->
+    <div class="flex items-center justify-center gap-6 mt-8">
+      <div class="flex items-center gap-2">
+        <span class="veg-dot"></span>
+        <span class="font-mono-dm text-[10px] text-cream/30 tracking-wide">Vegetarian</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="nonveg-dot"></span>
+        <span class="font-mono-dm text-[10px] text-cream/30 tracking-wide">Non-Vegetarian</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="spice">🌶️</span>
+        <span class="font-mono-dm text-[10px] text-cream/30 tracking-wide">Spicy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Category Tabs -->
+<div class="sticky top-[64px] z-50 bg-[#0a0b0d]/95 backdrop-blur-md border-b border-gold/[0.06] py-4 px-6">
+  <div class="tabs-scroll">
+    <div class="flex gap-3 w-max mx-auto" id="catTabs">
+      <button class="cat-tab active" onclick="filterCat('all',this)">All</button>
+      <button class="cat-tab" onclick="filterCat('starter',this)">🥗 Starters</button>
+      <button class="cat-tab" onclick="filterCat('main',this)">🍛 Mains</button>
+      <button class="cat-tab" onclick="filterCat('grill',this)">🔥 Grill & Tandoor</button>
+      <button class="cat-tab" onclick="filterCat('bread',this)">🫓 Breads & Rice</button>
+      <button class="cat-tab" onclick="filterCat('dessert',this)">🍮 Desserts</button>
+      <button class="cat-tab" onclick="filterCat('beverage',this)">🥛 Beverages</button>
+    </div>
+  </div>
+</div>
+
+<!-- Menu Content -->
+<div class="max-w-[1100px] mx-auto px-6 py-16">
+
+  <!-- ── Starters ─────────────────────────────────────────── -->
+  <div class="menu-section mb-16" data-cat="starter">
+    <div class="flex items-center gap-4 mb-10">
+      <div class="font-mono-dm text-[9px] tracking-[0.6em] uppercase text-gold/40">01</div>
+      <div class="font-display text-[clamp(22px,4vw,32px)] text-gradient-gold">Starters</div>
+      <div class="flex-1 hr-gold"></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/starter-1.jpg" alt="Galouti Kebab" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍢</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="nonveg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Galouti Kebab</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 680</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Melt-in-mouth minced mutton patties, 160 spices, kewra essence, roomali roti</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/starter-2.jpg" alt="Dahi Puri Shots" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🫙</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Dahi Puri Shots</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 320</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Crisp puris, whipped dahi, tamarind chutney, pomegranate, sev — served as shots</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/starter-3.jpg" alt="Hara Bhara Kebab" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🥬</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Hara Bhara Kebab</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 420</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Spinach, peas, potato tikkis, cashew filling, mint chutney</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/starter-4.jpg" alt="Chicken 65" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍗</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="nonveg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Chicken 65 <span class="spice">🌶️</span></span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 520</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Deep fried chicken, curry leaves, red chilli, yogurt marination</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/starter-5.jpg" alt="Tandoori Mushroom" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍄</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Tandoori Mushroom</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 480</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Button mushrooms, ajwain yogurt marinade, chaat masala, lemon</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/starter-6.jpg" alt="Prawn Koliwada" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🦐</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="nonveg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Prawn Koliwada <span class="spice">🌶️</span></span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 780</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Coastal style fried prawns, kokum chutney, onion rings</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Mains ──────────────────────────────────────────────── -->
+  <div class="menu-section mb-16" data-cat="main">
+    <div class="flex items-center gap-4 mb-10">
+      <div class="font-mono-dm text-[9px] tracking-[0.6em] uppercase text-gold/40">02</div>
+      <div class="font-display text-[clamp(22px,4vw,32px)] text-gradient-gold">Mains</div>
+      <div class="flex-1 hr-gold"></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/main-1.jpg" alt="Dal Makhani" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🫘</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Dal Makhani</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 580</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Black lentils slow-cooked overnight, butter, cream, signature spice blend</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/main-2.jpg" alt="Butter Chicken" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍛</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="nonveg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Murgh Makhani</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 720</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Tandoor roasted chicken, velvety tomato butter gravy, kasuri methi</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/main-3.jpg" alt="Paneer Lababdar" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🧀</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Paneer Lababdar</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 640</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Fresh cottage cheese, rich onion tomato gravy, whole spices, cream</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/main-4.jpg" alt="Mutton Rogan Josh" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍖</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="nonveg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Mutton Rogan Josh <span class="spice">🌶️</span></span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 950</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Kashmiri style slow-cooked mutton, dried ginger, mawal flowers, fennel</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/main-5.jpg" alt="Hyderabadi Dum Biryani" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍚</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="nonveg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Dum Biryani</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 880</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Hyderabadi style, basmati rice, saffron, caramelised onions, served with raita</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/main-6.jpg" alt="Palak Paneer" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🥬</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Palak Paneer</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 560</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Blanched spinach purée, fresh paneer, garlic tempering, touch of cream</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Grill & Tandoor ────────────────────────────────────── -->
+  <div class="menu-section mb-16" data-cat="grill">
+    <div class="flex items-center gap-4 mb-10">
+      <div class="font-mono-dm text-[9px] tracking-[0.6em] uppercase text-gold/40">03</div>
+      <div class="font-display text-[clamp(22px,4vw,32px)] text-gradient-gold">Grill & Tandoor</div>
+      <div class="flex-1 hr-gold"></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/grill-1.jpg" alt="Seekh Kebab" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍢</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="nonveg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Seekh Kebab</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 720</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Minced lamb on skewers, garam masala, raw papaya, charcoal grilled</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/grill-2.jpg" alt="Paneer Tikka" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🧆</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Paneer Tikka</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 620</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Thick paneer cubes, hung curd marinade, capsicum, onion, tandoor char</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/grill-3.jpg" alt="Malai Tikka" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍗</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="nonveg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Murgh Malai Tikka</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 780</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Chicken breast, cream cheese marinade, cardamom, cashew paste, mild & juicy</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/grill-4.jpg" alt="Tandoori Prawns" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🦐</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="nonveg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Tandoori Prawns <span class="spice">🌶️</span></span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 1,100</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Tiger prawns, ajwain marinade, tandoor roasted, lemon butter drizzle</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/grill-5.jpg" alt="Tandoori Chicken" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍖</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="nonveg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Tandoori Chicken <span class="spice">🌶️</span></span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 850</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Half chicken, overnight marination, smoky tandoor, served with mint chutney</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/grill-6.jpg" alt="Achari Soya Chaap" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🌿</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Achari Soya Chaap</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 580</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Soya chaap, pickle spice marinade, tandoor finish, onion rings</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Breads & Rice ──────────────────────────────────────── -->
+  <div class="menu-section mb-16" data-cat="bread">
+    <div class="flex items-center gap-4 mb-10">
+      <div class="font-mono-dm text-[9px] tracking-[0.6em] uppercase text-gold/40">04</div>
+      <div class="font-display text-[clamp(22px,4vw,32px)] text-gradient-gold">Breads & Rice</div>
+      <div class="flex-1 hr-gold"></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/bread-1.jpg" alt="Garlic Naan" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🫓</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Garlic Naan</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 120</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Leavened bread, roasted garlic, butter, fresh coriander</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/bread-2.jpg" alt="Laccha Paratha" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🥙</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Laccha Paratha</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 100</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Layered whole wheat, tandoor baked, served with white butter</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/bread-3.jpg" alt="Jeera Rice" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍚</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Jeera Rice</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 180</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Basmati rice, cumin tempering, ghee, fresh coriander</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Desserts ───────────────────────────────────────────── -->
+  <div class="menu-section mb-16" data-cat="dessert">
+    <div class="flex items-center gap-4 mb-10">
+      <div class="font-mono-dm text-[9px] tracking-[0.6em] uppercase text-gold/40">05</div>
+      <div class="font-display text-[clamp(22px,4vw,32px)] text-gradient-gold">Desserts</div>
+      <div class="flex-1 hr-gold"></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/dessert-1.jpg" alt="Gulab Jamun" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍮</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Gulab Jamun</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 280</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Khoya dumplings, rose saffron sugar syrup, served warm with rabdi</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/dessert-2.jpg" alt="Mango Kulfi" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍦</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Mango Kulfi</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 320</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Alphonso mango, condensed milk kulfi, falooda sev, rose syrup</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/dessert-3.jpg" alt="Shahi Tukda" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍞</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Shahi Tukda</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 340</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Fried bread soaked in sugar syrup, thickened rabdi, saffron, silver leaf</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/dessert-4.jpg" alt="Phirni" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🥛</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Phirni</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 260</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Ground rice milk pudding, cardamom, rose water, served chilled in matki</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Beverages ──────────────────────────────────────────── -->
+  <div class="menu-section mb-16" data-cat="beverage">
+    <div class="flex items-center gap-4 mb-10">
+      <div class="font-mono-dm text-[9px] tracking-[0.6em] uppercase text-gold/40">06</div>
+      <div class="font-display text-[clamp(22px,4vw,32px)] text-gradient-gold">Beverages</div>
+      <div class="flex-1 hr-gold"></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/beverage-1.jpg" alt="Masala Chai" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">☕</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Masala Chai</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 120</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Ginger, cardamom, cinnamon, cloves — served in kulhad</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/beverage-2.jpg" alt="Mango Lassi" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🥭</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Mango Lassi</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 200</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Thick dahi, Alphonso mango pulp, cardamom, chilled</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/beverage-3.jpg" alt="Rose Sharbat" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🌹</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Rose Sharbat</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 180</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Rooh afza, basil seeds, lemon, sparkling water, rose petals</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/beverage-4.jpg" alt="Thandai" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🥛</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Thandai</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 220</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Chilled milk, almonds, fennel, cardamom, saffron, melon seeds</p>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <img loading="lazy" src="images/menu/beverage-5.jpg" alt="Jaljeera" class="menu-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="menu-img-placeholder" style="display:none;">🍋</div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="veg-dot"></span>
+              <span class="font-display text-[17px] text-cream/85">Jaljeera Mocktail</span>
+            </div>
+            <span class="font-mono-dm text-[13px] text-gold/70 whitespace-nowrap">₹ 160</span>
+          </div>
+          <p class="text-cream/30 text-xs leading-relaxed tracking-wide">Cumin, mint, tamarind, black salt, boondi — a classic digestif</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- CTA -->
+<section class="relative py-20 px-6 text-center">
+  <div class="absolute inset-0" style="background:radial-gradient(ellipse at 50% 50%,rgba(196,154,60,0.05),transparent 60%)"></div>
+  <div class="absolute inset-0 noise"></div>
+  <div class="relative z-10">
+    <div class="hr-gold w-12 mx-auto mb-8"></div>
+    <h2 class="font-display text-[clamp(24px,5vw,38px)] font-medium mb-4"><span class="text-gradient-gold">Ready to Dine?</span></h2>
+    <p class="text-cream/30 text-sm mb-8 tracking-wide font-light">Reserve your table and experience the full flavour of Maison</p>
+    <a href="book.html" class="inline-block px-10 py-4 font-mono-dm text-[11px] tracking-[.25em] uppercase font-medium" style="background:linear-gradient(135deg,#b8903a,#c9a24a);color:#0a0b0d;">Reserve a Table</a>
+  </div>
+</section>
+
+<script>
+function filterCat(cat, btn) {
+  document.querySelectorAll('.cat-tab').forEach(function(t){ t.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.menu-section').forEach(function(sec){
+    sec.style.display = (cat === 'all' || sec.dataset.cat === cat) ? '' : 'none';
+  });
+  // Smooth scroll to first visible section
+  if (cat !== 'all') {
+    var sec = document.querySelector('.menu-section[data-cat="'+cat+'"]');
+    if (sec) setTimeout(function(){ sec.scrollIntoView({behavior:'smooth', block:'start'}); }, 50);
+  }
+}
+</script>
+
+<script>
+(function initNav(){
+  var base=window.location.pathname.indexOf('/admin/')>-1?'../':'';
+  var token=localStorage.getItem('maison_token')||'';
+  var user=null;
+  try{user=JSON.parse(localStorage.getItem('maison_user'));}catch(e){}
+  var isAdmin=user&&user.role==='admin';
+  var page=window.location.pathname.split('/').pop()||'index.html';
+  function lnk(href,label,active){return '<a href="'+base+href+'" class="mn-link'+(active?' mn-active':'')+'" >'+label+'</a>';}
+  var desk=document.getElementById('mnLinks');
+  var mobAuth=document.getElementById('mnAuthMob');
+  var mobAdmin=document.getElementById('mnAdminMob');
+  if(user&&token){
+    desk.innerHTML=
+      lnk('index.html','Home',page==='index.html')+
+      lnk('book.html','Reserve',page==='book.html')+
+      lnk('menu.html','Menu',page==='menu.html')+
+      lnk('my-bookings.html','Bookings',page==='my-bookings.html')+
+      lnk('profile.html','Profile',page==='profile.html')+
+      lnk('about.html','About',page==='about.html')+
+      (isAdmin?lnk('admin/index.html','Admin',false):'')+
+      '<button onclick="mnSignOut()" class="mn-btn">Sign Out</button>';
+    if(mobAdmin&&isAdmin)mobAdmin.innerHTML='<a href="'+base+'admin/index.html" class="mn-mi mn-mi-gold">Admin Panel</a>';
+    if(mobAuth)mobAuth.innerHTML='<button onclick="mnSignOut()" class="mn-mi mn-mi-red">Sign Out</button>';
+  }else{
+    desk.innerHTML=
+      lnk('index.html','Home',page==='index.html')+
+      lnk('book.html','Reserve',page==='book.html')+
+      lnk('menu.html','Menu',page==='menu.html')+
+      lnk('about.html','About',page==='about.html')+
+      '<a href="'+base+'login.html" class="mn-btn">Sign In</a>';
+    if(mobAuth)mobAuth.innerHTML='<a href="'+base+'login.html" class="mn-mi mn-mi-gold">Sign In</a><a href="'+base+'register.html" class="mn-mi">Create Account</a>';
+  }
+  document.querySelectorAll('.mn-drawer a[href]').forEach(function(a){
+    var h=a.getAttribute('href');
+    if(h&&!h.startsWith('http')&&!h.startsWith(base)&&base)a.href=base+h;
+  });
+})();
+function mnToggle(){document.getElementById('mnHam').classList.toggle('open');document.getElementById('mnDrawer').classList.toggle('open');}
+document.addEventListener('click',function(e){var h=document.getElementById('mnHam'),d=document.getElementById('mnDrawer');if(h&&d&&!h.contains(e.target)&&!d.contains(e.target)){h.classList.remove('open');d.classList.remove('open');}});
+window.addEventListener('scroll',function(){document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>10);});
+function mnSignOut(){localStorage.removeItem('maison_token');localStorage.removeItem('maison_user');window.location.href=(window.location.pathname.indexOf('/admin/')>-1?'../':'')+'index.html';}
+</script>
+</body>
+</html>

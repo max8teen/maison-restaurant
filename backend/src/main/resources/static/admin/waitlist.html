@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Waitlist — Maison Admin</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0b0d'/><text y='26' x='4' font-size='24' fill='%23c49a3c' font-family='Georgia,serif'>M</text></svg>"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="admin.css"/>
+<style>
+  body { font-family:'Outfit',sans-serif; background:#0a0b0d; color:#f2edd8; }
+  .pill { display:inline-block; padding:2px 10px; border-radius:2px; font-size:11px; letter-spacing:1px; text-transform:uppercase; }
+  .pill-wait    { background:#7a6a3522; color:#c49a3c; }
+  .pill-notified{ background:#1a3a1a; color:#4caf50; }
+</style>
+</head>
+<body class="min-h-screen">
+<div class="flex">
+  <!-- Sidebar placeholder — same nav as other admin pages -->
+  <script>document.write('<sc'+'ript src="admin.js"><\/sc'+'ript>');</script>
+</div>
+
+<div style="margin-left:240px; padding:32px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+    <div>
+      <div style="font-size:11px;letter-spacing:4px;color:#7a6a35;text-transform:uppercase;margin-bottom:4px;">Manage</div>
+      <h1 style="font-size:22px;font-family:Georgia,serif;color:#f2edd8;font-weight:normal;">Waitlist</h1>
+    </div>
+    <div id="total-badge" style="font-size:12px;color:#7a6a35;letter-spacing:2px;"></div>
+  </div>
+
+  <!-- Filter bar -->
+  <div style="display:flex;gap:10px;margin-bottom:20px;">
+    <select id="filter-notified" style="background:#131518;border:1px solid #1e1f24;color:#c4b898;padding:8px 12px;font-size:13px;outline:none;" onchange="renderTable()">
+      <option value="">All entries</option>
+      <option value="0">Waiting</option>
+      <option value="1">Notified</option>
+    </select>
+    <input id="search" placeholder="Search name or email…" oninput="renderTable()"
+      style="background:#131518;border:1px solid #1e1f24;color:#c4b898;padding:8px 14px;font-size:13px;outline:none;min-width:220px;"/>
+  </div>
+
+  <div style="background:#131518;border:1px solid #1e1f24;overflow:auto;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:1px solid #1e1f24;">
+          <th style="padding:14px 16px;text-align:left;font-size:11px;letter-spacing:2px;color:#7a6a35;font-weight:400;text-transform:uppercase;">Guest</th>
+          <th style="padding:14px 16px;text-align:left;font-size:11px;letter-spacing:2px;color:#7a6a35;font-weight:400;text-transform:uppercase;">Date & Time</th>
+          <th style="padding:14px 16px;text-align:center;font-size:11px;letter-spacing:2px;color:#7a6a35;font-weight:400;text-transform:uppercase;">Party</th>
+          <th style="padding:14px 16px;text-align:center;font-size:11px;letter-spacing:2px;color:#7a6a35;font-weight:400;text-transform:uppercase;">Status</th>
+          <th style="padding:14px 16px;text-align:left;font-size:11px;letter-spacing:2px;color:#7a6a35;font-weight:400;text-transform:uppercase;">Joined</th>
+          <th style="padding:14px 16px;text-align:center;font-size:11px;letter-spacing:2px;color:#7a6a35;font-weight:400;text-transform:uppercase;">Action</th>
+        </tr>
+      </thead>
+      <tbody id="wl-tbody">
+        <tr><td colspan="6" style="padding:40px;text-align:center;color:#3a3b3f;">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const TOKEN = localStorage.getItem('maison_token') || '';
+if (!TOKEN) window.location.href = '../login.html';
+let allEntries = [];
+
+async function apiCall(method, endpoint, body) {
+  const t = encodeURIComponent(TOKEN);
+  const r = await fetch(`api/${endpoint}?t=${t}`, {
+    method, headers:{'Content-Type':'application/json'},
+    body: method!=='GET' ? JSON.stringify({...body,_token:TOKEN}) : undefined,
+  });
+  return r.json();
+}
+
+async function loadWaitlist() {
+  const res = await apiCall('GET', 'get-waitlist');
+  if (!res.success) { alert('Not authorised'); window.location.href='../login.html'; return; }
+  allEntries = res.data.waitlist || [];
+  document.getElementById('total-badge').textContent = allEntries.length + ' ENTRIES';
+  renderTable();
+}
+
+function fmtDate(d) {
+  if (!d) return '—';
+  const dt = new Date(d + (d.includes('T') ? '' : 'T00:00:00'));
+  return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+}
+function toAMPM(t) {
+  if (!t) return '';
+  const [h,m] = t.split(':').map(Number);
+  return (h%12||12)+':'+(String(m).padStart(2,'0'))+' '+(h<12?'AM':'PM');
+}
+
+function renderTable() {
+  const filterNotified = document.getElementById('filter-notified').value;
+  const q = document.getElementById('search').value.toLowerCase();
+  let list = allEntries;
+  if (filterNotified !== '') list = list.filter(e => String(e.notified) === filterNotified);
+  if (q) list = list.filter(e => (e.name||'').toLowerCase().includes(q) || (e.email||'').toLowerCase().includes(q));
+
+  if (!list.length) {
+    document.getElementById('wl-tbody').innerHTML = `<tr><td colspan="6" style="padding:40px;text-align:center;color:#3a3b3f;">No waitlist entries found.</td></tr>`;
+    return;
+  }
+
+  document.getElementById('wl-tbody').innerHTML = list.map(e => `
+    <tr style="border-bottom:1px solid #1a1b1f;" data-id="${e.id}">
+      <td style="padding:14px 16px;">
+        <div style="font-size:14px;color:#f2edd8;">${e.name||'—'}</div>
+        <div style="font-size:12px;color:#4a4540;margin-top:2px;">${e.email||''}</div>
+      </td>
+      <td style="padding:14px 16px;">
+        <div style="font-size:13px;color:#c4b898;">${fmtDate(e.reservation_date)}</div>
+        <div style="font-size:12px;color:#7a6a35;margin-top:2px;">${toAMPM(e.reservation_time)}</div>
+      </td>
+      <td style="padding:14px 16px;text-align:center;font-size:13px;color:#8a8070;">${e.party_size}</td>
+      <td style="padding:14px 16px;text-align:center;">
+        <span class="pill ${e.notified=='1'?'pill-notified':'pill-wait'}">${e.notified=='1'?'Notified':'Waiting'}</span>
+      </td>
+      <td style="padding:14px 16px;font-size:12px;color:#4a4540;">${new Date(e.created_at).toLocaleDateString('en-IN')}</td>
+      <td style="padding:14px 16px;text-align:center;">
+        ${e.notified=='0' ? `<button onclick="notifyEntry(${e.id}, '${e.email}', '${e.reservation_date}', '${e.reservation_time}', ${e.party_size})"
+          style="background:#1a1c20;border:1px solid #2a2c30;color:#c49a3c;font-size:11px;letter-spacing:1px;padding:5px 12px;cursor:pointer;">
+          Notify
+        </button>` : '<span style="font-size:11px;color:#3a3b3f;">—</span>'}
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function notifyEntry(id, email, date, time, party) {
+  if (!confirm('Send a table-available notification to ' + email + '?')) return;
+  // Mark as notified via manual trigger
+  const res = await apiCall('POST', 'notify-waitlist', { id });
+  if (res.success) {
+    const e = allEntries.find(x => x.id == id);
+    if (e) e.notified = '1';
+    renderTable();
+    alert('Notification sent to ' + email);
+  } else {
+    alert('Failed: ' + res.message);
+  }
+}
+
+loadWaitlist();
+</script>
+</body>
+</html>
